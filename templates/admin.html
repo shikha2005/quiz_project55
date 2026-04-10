@@ -1,0 +1,25 @@
+<html>
+<head>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+<h2>Add Question</h2>
+
+<form method="post">
+<input name="question" placeholder="Question"><br>
+<input name="o1" placeholder="Option 1"><br>
+<input name="o2" placeholder="Option 2"><br>
+<input name="o3" placeholder="Option 3"><br>
+<input name="o4" placeholder="Option 4"><br>
+<input name="answer" placeholder="Correct Answer (1-4)"><br>
+
+<button>Add Question</button>
+</form>
+
+<a href="/logout">Logout</a>
+</div>
+
+</body>
+</html>
