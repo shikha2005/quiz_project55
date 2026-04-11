@@ -39,7 +39,7 @@ input[type="radio"] {
     margin: 0 10px 0 0;    /* Adds 10px of space to the right of the button */
     cursor: pointer;       /* Makes it look clickable */
 }
-}
+
 
 button {
     width: 100%;
