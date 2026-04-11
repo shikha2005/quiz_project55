@@ -1,0 +1,9 @@
+<div style="text-align:center;">
+    <h1>Score: {{score}} / {{total}}</h1>
+
+    <img src="{{ url_for('static', filename='reward.gif') }}" width="300">
+
+    <br><br>
+
+    <a href="/">Home</a>
+</div>
