@@ -1,6 +1,6 @@
 import os
-app = Flask(__name__, static_folder='static')
 from flask import Flask, render_template, request, redirect, session
+app = Flask(__name__, static_folder='static')
 import sqlite3
 
 app = Flask(__name__)
