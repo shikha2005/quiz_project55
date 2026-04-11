@@ -14,3 +14,12 @@
 
 </body>
 </html>
+<h1>Score: {{score}} / {{total}}</h1>
+
+{% if score >= total/2 %}
+    <img src="{{ url_for('static', filename='reward.gif') }}" width="300">
+{% else %}
+    <p>Try Again 😢</p>
+{% endif %}
+
+<a href="/">Home</a>
