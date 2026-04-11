@@ -24,12 +24,21 @@ h2 {
     margin-bottom: 15px;
 }
 
-input {
+/* 1. This targets ONLY text-based inputs, ignoring radio buttons */
+input[type="text"], input[type="password"], input[type="email"] {
     width: 95%;
     padding: 10px;
     margin: 8px 0;
     border-radius: 6px;
     border: 1px solid #ccc;
+}
+
+/* 2. This targets ONLY the radio buttons to fix their spacing */
+input[type="radio"] {
+    width: auto;           /* Stops the button from stretching */
+    margin: 0 10px 0 0;    /* Adds 10px of space to the right of the button */
+    cursor: pointer;       /* Makes it look clickable */
+}
 }
 
 button {
