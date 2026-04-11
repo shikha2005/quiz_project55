@@ -1,9 +1,8 @@
-import os
 from flask import Flask, render_template, request, redirect, session
-app = Flask(__name__, static_folder='static')
 import sqlite3
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.secret_key = "secret"
 
 # HOME
