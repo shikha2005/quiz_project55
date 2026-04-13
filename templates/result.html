@@ -17,7 +17,15 @@
 <h1>Score: {{score}} / {{total}}</h1>
 
 {% if score >= total/2 %}
-    <img src="{{ url_for('static', filename='reward.gif') }}" width="300">
+    <div class="tenor-gif-embed" 
+         data-postid="11038675236941812215" 
+         data-share-method="host" 
+         data-aspect-ratio="1" 
+         data-width="300px">
+    </div>
+
+    <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+
 {% else %}
     <p>Try Again 😢</p>
 {% endif %}
