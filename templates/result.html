@@ -14,19 +14,27 @@
 
 </body>
 </html>
-<div class="center">
+<h1>Score: {{score}} / {{total}}</h1>
 
-    <h1>Your Score</h1>
-    <h2>{{score}} / {{total}}</h2>
+{% if score >= total/2 %}
 
-    {% if score >= total/2 %}
-        <img src="{{ url_for('static', filename='reward.gif') }}" width="300">
-    {% else %}
-        <p>Try Again 😢</p>
-    {% endif %}
+    <div class="center">
+        <div class="tenor-gif-embed" 
+             data-postid="11038675236941812215" 
+             data-share-method="host" 
+             data-aspect-ratio="1" 
+             data-width="300px">
+        </div>
+    </div>
 
-    <br>
+{% else %}
+    <p>Try Again 😢</p>
+{% endif %}
 
+<a href="/">Home</a>
+
+<!-- Script (only once, at bottom) -->
+<script type="text/javascript" async src="https://tenor.com/embed.js"></script>
     <a href="/">Go Home</a>
 
 </div>
