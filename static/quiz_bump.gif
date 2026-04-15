@@ -1,6 +1,0 @@
-<lottie-player 
-src="{{ url_for('static', filename='quizbump.gif') }}"
-style="width:300px; height:300px;"
-loop
-autoplay>
-</lottie-player>
