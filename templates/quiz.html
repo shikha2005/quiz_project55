@@ -25,6 +25,19 @@
 </form>
 
 </div>
+<script>
+let timeLeft = 30;
 
+let timer = setInterval(function() {
+    document.getElementById("timer").innerText = timeLeft;
+    timeLeft--;
+
+    if (timeLeft < 0) {
+        clearInterval(timer);
+        alert("Time's up!");
+        document.querySelector("form").submit();
+    }
+}, 1000);
+</script>
 </body>
 </html>
