@@ -110,11 +110,8 @@ def signup():
         return redirect('/login')
 
     return render_template('signup.html')
-if __name__ == '__main__':
-    import os
-port = int(os.environ.get("PORT", 5000))
-app.run(host='0.0.0.0', port=port)
-@app.route('/edit/<int:id>', methods=['GET','POST'])
+    #edit
+    @app.route('/edit/<int:id>', methods=['GET','POST'])
 def edit(id):
     if session.get('role') != 'admin':
         return "Access Denied"
@@ -147,3 +144,8 @@ def edit(id):
     conn.close()
 
     return render_template('edit.html', q=question)
+
+if __name__ == '__main__':
+    import os
+port = int(os.environ.get("PORT", 5000))
+app.run(host='0.0.0.0', port=port)
