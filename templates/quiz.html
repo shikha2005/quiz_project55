@@ -29,15 +29,20 @@
 let timeLeft = 30;
 
 let timer = setInterval(function() {
-    document.getElementById("timer").innerText = timeLeft;
+    let timerElement = document.getElementById("timer");
+    
+    timerElement.innerText = timeLeft;
+
+    // 🔥 Change color when low
+    if (timeLeft <= 10) {
+        timerElement.style.color = "red";
+    }
+
     timeLeft--;
 
     if (timeLeft < 0) {
         clearInterval(timer);
-        alert("Time's up!");
         document.querySelector("form").submit();
     }
 }, 1000);
 </script>
-</body>
-</html>
