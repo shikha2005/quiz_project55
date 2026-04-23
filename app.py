@@ -74,6 +74,9 @@ def admin():
     if session.get('role') != 'admin':
         return "Access Denied"
 
+    conn = sqlite3.connect('database.db')
+    cur = conn.cursor()
+
     if request.method == 'POST':
         q = request.form['question']
         o1 = request.form['o1']
@@ -82,14 +85,18 @@ def admin():
         o4 = request.form['o4']
         ans = request.form['answer']
 
-        conn = sqlite3.connect('database.db')
-        cur = conn.cursor()
         cur.execute("INSERT INTO questions (question, option1, option2, option3, option4, correct_answer) VALUES (?, ?, ?, ?, ?, ?)", (q,o1,o2,o3,o4,ans))
         conn.commit()
-        conn.close()
 
-    return render_template('admin.html')
+    # 🔥 ADD THIS (VERY IMPORTANT)
+    cur.execute("SELECT * FROM questions")
+    questions = cur.fetchall()
 
+    conn.close()
+
+    return render_template('admin.html', questions=questions)
+
+  
 # LOGOUT
 @app.route('/logout')
 def logout():
@@ -144,8 +151,7 @@ def edit(id):
     conn.close()
 
     return render_template('edit.html', q=question)
-
 if __name__ == '__main__':
     import os
-port = int(os.environ.get("PORT", 5000))
-app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
