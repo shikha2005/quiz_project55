@@ -7,6 +7,7 @@
 <div class="container">
 <h2>Add Question</h2>
 
+<!-- ✅ FORM ONLY FOR ADD -->
 <form method="post">
 <input name="question" placeholder="Question"><br>
 <input name="o1" placeholder="Option 1"><br>
@@ -15,30 +16,30 @@
 <input name="o4" placeholder="Option 4"><br>
 <input name="answer" placeholder="Correct Answer (1-4)"><br>
 
-<button>Add Question</button>
+<button type="submit">Add Question</button>
+</form>
+
+<!-- ✅ NOW OUTSIDE FORM -->
 <h2>All Questions</h2>
 
 {% for q in questions %}
     <p>{{ q[1] }}</p>
 
-    <!-- EDIT BUTTON -->
+    <!-- ✅ EDIT BUTTON -->
     <a href="/edit/{{q[0]}}">
-        <button>Edit</button>
+        <button type="button">Edit</button>
     </a>
 
-    <!-- DELETE BUTTON (optional) -->
+    <!-- ✅ DELETE BUTTON -->
     <a href="/delete/{{q[0]}}">
-        <button style="background:red; color:white;">Delete</button>
+        <button type="button" style="background:red; color:white;">Delete</button>
     </a>
 
     <hr>
 {% endfor %}
-    
-</form>
 
 <a href="/logout">Logout</a>
 </div>
 
 </body>
 </html>
-
