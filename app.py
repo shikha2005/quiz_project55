@@ -114,3 +114,36 @@ if __name__ == '__main__':
     import os
 port = int(os.environ.get("PORT", 5000))
 app.run(host='0.0.0.0', port=port)
+@app.route('/edit/<int:id>', methods=['GET','POST'])
+def edit(id):
+    if session.get('role') != 'admin':
+        return "Access Denied"
+
+    conn = sqlite3.connect('database.db')
+    cur = conn.cursor()
+
+    if request.method == 'POST':
+        q = request.form['question']
+        o1 = request.form['o1']
+        o2 = request.form['o2']
+        o3 = request.form['o3']
+        o4 = request.form['o4']
+        ans = request.form['answer']
+
+        cur.execute("""
+            UPDATE questions 
+            SET question=?, option1=?, option2=?, option3=?, option4=?, correct_answer=? 
+            WHERE id=?
+        """, (q, o1, o2, o3, o4, ans, id))
+
+        conn.commit()
+        conn.close()
+
+        return redirect('/admin')
+
+    # GET request (load existing data)
+    cur.execute("SELECT * FROM questions WHERE id=?", (id,))
+    question = cur.fetchone()
+    conn.close()
+
+    return render_template('edit.html', q=question)
