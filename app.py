@@ -95,6 +95,19 @@ def admin():
     conn.close()
 
     return render_template('admin.html', questions=questions)
+@app.route('/delete/<int:id>')
+def delete(id):
+    if session.get('role') != 'admin':
+        return "Access Denied"
+
+    conn = sqlite3.connect('database.db')
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM questions WHERE id=?", (id,))
+    conn.commit()
+    conn.close()
+
+    return redirect('/admin')
 
   
 # LOGOUT
