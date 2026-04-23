@@ -111,7 +111,7 @@ def signup():
 
     return render_template('signup.html')
     #edit
-    @app.route('/edit/<int:id>', methods=['GET','POST'])
+@app.route('/edit/<int:id>', methods=['GET','POST'])
 def edit(id):
     if session.get('role') != 'admin':
         return "Access Denied"
