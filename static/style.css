@@ -2,7 +2,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background: url("/static/images/marvel.jpg") no-repeat center center;
+    background: url("/static/images/marvell.jpg") no-repeat center center;
     background-size: cover;
     font-family: Arial, sans-serif;
 }
