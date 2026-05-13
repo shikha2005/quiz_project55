@@ -2,10 +2,10 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background: url("avengers.jpg") no-repeat center center/cover;
+    background: url("/static/images/avengers.jpg") no-repeat center center;
+    background-size: cover;
     font-family: Arial, sans-serif;
 }
-
 /* Dark overlay */
 .overlay {
     height: 100%;
