@@ -1,57 +1,50 @@
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #f0f2f5;
     margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: url("Avengers_Infinity_War.jpg") no-repeat center center/cover;
+    font-family: Arial, sans-serif;
 }
 
-.header {
-    background: #2575fc;
-    color: white;
-    padding: 15px;
-    font-size: 20px;
-}
-
-.container {
-    width: 500px;
-    margin: 40px auto;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-h2 {
-    margin-bottom: 15px;
-}
-
-/* 1. This targets ONLY text-based inputs, ignoring radio buttons */
-input[type="text"], input[type="password"], input[type="email"] {
-    width: 95%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-/* 2. This targets ONLY the radio buttons to fix their spacing */
-input[type="radio"] {
-    width: auto;           /* Stops the button from stretching */
-    margin: 0 10px 0 0;    /* Adds 10px of space to the right of the button */
-    cursor: pointer;       /* Makes it look clickable */
-}
-
-
-button {
+/* Dark overlay */
+.overlay {
+    height: 100%;
     width: 100%;
-    padding: 10px;
-    background: #2575fc;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 15px;
-}
-.center {
+    background: rgba(0, 0, 0, 0.6); /* IMPORTANT */
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+}
+
+/* Center content */
+.content {
+    text-align: center;
+    color: white;
+}
+
+/* Title */
+h1 {
+    font-size: 50px;
+    margin-bottom: 30px;
+}
+
+/* Buttons */
+button {
+    display: block;
+    width: 250px;
+    margin: 10px auto;
+    padding: 12px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    background: red;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Hover effect */
+button:hover {
+    background: gold;
+    transform: scale(1.05);
 }
