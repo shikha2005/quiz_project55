@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Character</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial;
+        }
+
+        body{
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            background:url("/static/images/arena.jpg") no-repeat center center;
+            background-size:cover;
+        }
+
+        .select-box{
+            background:rgba(0,0,0,0.7);
+            padding:40px;
+            border-radius:20px;
+            text-align:center;
+
+            box-shadow:
+            0 0 20px red,
+            0 0 40px blue;
+        }
+
+        h1{
+            color:white;
+            margin-bottom:30px;
+        }
+
+        select{
+            width:300px;
+            padding:15px;
+            margin:15px;
+            font-size:18px;
+            border-radius:10px;
+        }
+
+        button{
+            padding:15px 30px;
+            margin-top:20px;
+
+            border:none;
+            border-radius:10px;
+
+            background:#111;
+            color:white;
+
+            border:2px solid cyan;
+            cursor:pointer;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="select-box">
+
+        <h1>SELECT YOUR FIGHTERS</h1>
+
+        <form action="/battle_mode" method="GET">
+
+            <select name="player1">
+
+                <option>Iron Man</option>
+                <option>Thor</option>
+                <option>Captain America</option>
+                <option>Hulk</option>
+
+            </select>
+
+            <br>
+
+            <select name="player2">
+
+                <option>Thanos</option>
+                <option>Loki</option>
+                <option>Ultron</option>
+                <option>Red Skull</option>
+
+            </select>
+
+            <br>
+
+            <button type="submit">START BATTLE</button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>
