@@ -166,7 +166,7 @@ def edit(id):
 
         return redirect('/admin')
         @app.route('/mode')
-def mode():
+ def mode():
     return render_template('mode.html')
 
     # GET request (load existing data)
