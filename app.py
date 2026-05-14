@@ -126,6 +126,7 @@ def signup():
         
      conn = sqlite3.connect('database.db')
      cur = conn.cursor()
+
      cur.execute("INSERT INTO users (username, password, role) VALUES (?, ?, 'user')", (u,p))
      conn.commit()
      conn.close()
