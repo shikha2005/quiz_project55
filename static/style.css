@@ -2,9 +2,17 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background: url("/static/images/dark.jpg") no-repeat center center;
-    background-size: cover;
     font-family: Arial, sans-serif;
+}
+
+#bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    z-index: -1;
 }
 /* Dark overlay */
 .overlay {
