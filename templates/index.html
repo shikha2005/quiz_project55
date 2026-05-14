@@ -112,18 +112,21 @@
   cursor: pointer;
 }
 
-/* Hover Effect (Lifts up and glows) */
+/* Hover Effect (Turns vibrant green and glows) */
 .quiz-button:hover {
-  background: linear-gradient(180deg, rgba(50, 50, 50, 0.9) 0%, rgba(25, 25, 25, 1) 100%);
+  /* Changes the background to a bright green gradient */
+  background: linear-gradient(180deg, rgba(0, 200, 83, 0.9) 0%, rgba(0, 150, 36, 1) 100%);
+  
+  /* Changes the border to a neon green */
+  border: 1px solid #00FF66; 
+  
+  /* Keeps the 3D lift effect */
   transform: translateY(-4px); 
+  
+  /* Updates the glow to match the new green color */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8), 
-              0 0 15px rgba(0, 229, 255, 0.6); /* Cyan glow */
+              0 0 20px rgba(0, 255, 102, 0.7); 
 }
-
-/* Click Effect (Pushes down) */
-.quiz-button:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
 }
     </style>
 
