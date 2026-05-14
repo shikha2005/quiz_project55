@@ -104,13 +104,30 @@
 
         <input type="text" name="username" placeholder="Enter Username">
 
-        <input type="password" name="password" placeholder="Enter Password">
+       <input type="password" 
+       name="password" 
+       id="password"
+       placeholder="Enter Password (min 5 chars)"
+       minlength="5"
+       required>
+
+<button type="button" onclick="togglePassword()">👁</button>
 
         <button type="submit">START GAME</button>
 
     </form>
 
    </div>
+<script>
+function togglePassword() {
+    let pass = document.getElementById("password");
 
+    if (pass.type === "password") {
+        pass.type = "text";
+    } else {
+        pass.type = "password";
+    }
+}
+</script>
 </body>
 </html>
