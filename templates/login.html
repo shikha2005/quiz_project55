@@ -102,13 +102,12 @@
 
     <form method="POST">
 
-        <input type="text" name="username" placeholder="Enter Username">
+        <input type="password" id="password" name="password" placeholder="Enter Password">
 
-        <input type="password" name="password" placeholder="Enter Password">
-
-        <a href="/mode"><button class="quiz-button">Start Game</button></a>
-        
         <button type="button" onclick="togglePassword()">👁</button>
+
+        <button type="submit" class="quiz-button">Start Game</button>
+        
 <script>
 function togglePassword() {
     let pass = document.getElementById("password");
