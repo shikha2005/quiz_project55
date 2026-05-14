@@ -30,43 +30,8 @@
             z-index:-1;
         }
 
-      .quiz-container {
-
-    background: linear-gradient(
-        135deg,
-        rgba(255,255,255,0.05),
-        rgba(0,0,0,0.4)
-    );
-
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    border: 1px solid rgba(255,255,255,0.1);
-    border-top: 1px solid rgba(255,255,255,0.3);
-    border-left: 1px solid rgba(255,255,255,0.2);
-
-    box-shadow:
-        0 20px 40px rgba(0,0,0,0.6),
-        0 0 30px rgba(180,0,255,0.4),
-        inset 0 1px 0 rgba(255,255,255,0.2);
-
-    border-radius: 16px;
-
-    padding: 50px;
-    text-align: center;
-}
-        .quiz-title {
-    color: #ffffff;
-
-    text-shadow:
-        0px 4px 10px rgba(0,0,0,0.8),
-        0px 1px 2px rgba(0,0,0,0.5);
-
-    font-weight: 800;
-    letter-spacing: 2px;
-}
-        .quiz-button {
-  /* Give them a dark, semi-transparent base instead of completely empty */
+     
+      instead of completely empty */
   background: linear-gradient(180deg, rgba(30, 30, 30, 0.8) 0%, rgba(10, 10, 10, 0.9) 100%);
   border: 1px solid #00E5FF; /* Keep your cyan border */
   color: white;
@@ -81,18 +46,84 @@
   cursor: pointer;
 }
 
-/* The Hover Effect (Crucial for interactivity) */
-.quiz-button:hover {
-  background: linear-gradient(180deg, rgba(40, 40, 40, 0.9) 0%, rgba(20, 20, 20, 1) 100%);
-  transform: translateY(-3px); /* Lifts the button up */
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6), /* Shadow gets bigger as it lifts */
-              0 0 15px rgba(0, 229, 255, 0.4); /* Add a subtle cyan glow on hover */
+/* 1. The Main Glass Container */
+.quiz-container {
+  /* Layout & Spacing */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px; /* Pushes the title and buttons apart */
+  padding: 50px 70px;
+  
+  /* Glassmorphism & 3D Effects */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.6));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  
+  /* 3D Edges */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  
+  /* Deep shadows and Purple Glow */
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.8),             
+    0 0 40px rgba(180, 0, 255, 0.3),            
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);     
 }
 
-/* The Click Effect */
+/* 2. The 3D Title */
+.quiz-title {
+  color: #ffffff; /* Forces the text to be white */
+  margin: 0;
+  font-size: 2.8rem;
+  font-family: Arial, sans-serif; /* Adjust to your preferred font */
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 2px;
+  
+  /* Lifts the text off the glass */
+  text-shadow: 0px 5px 15px rgba(0, 0, 0, 0.9), 
+               0px 2px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* 3. Button Layout Wrapper */
+.button-group {
+  display: flex;
+  gap: 20px; /* Creates the space between the buttons */
+  justify-content: center;
+}
+
+/* 4. The 3D Buttons */
+.quiz-button {
+  background: linear-gradient(180deg, rgba(40, 40, 40, 0.85) 0%, rgba(15, 15, 15, 0.95) 100%);
+  border: 1px solid #00E5FF;
+  color: #ffffff;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  
+  /* Gives the button physical volume */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6), 
+              inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* Hover Effect (Lifts up and glows) */
+.quiz-button:hover {
+  background: linear-gradient(180deg, rgba(50, 50, 50, 0.9) 0%, rgba(25, 25, 25, 1) 100%);
+  transform: translateY(-4px); 
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8), 
+              0 0 15px rgba(0, 229, 255, 0.6); /* Cyan glow */
+}
+
+/* Click Effect (Pushes down) */
 .quiz-button:active {
-  transform: translateY(1px); /* Pushes the button down */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8); /* Shadow shrinks */
+  transform: translateY(2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
 }
     </style>
 
@@ -105,15 +136,14 @@
         <source src="{{ url_for('static', filename='videos/tt.mp4') }}" type="video/mp4">
     </video>
 
-    <div class="quiz-container">
-
-        <h1>MARVEL QUIZ ARENA</h1>
-
-        <a href="/quiz"><button>Start Game</button></a>
-
-        <a href="/login"><button>Login</button></a>
-
-        <a href="/signup"><button>Sign Up</button></a>
+   <div class="quiz-container">
+  <h1 class="quiz-title">MARVEL QUIZ ARENA</h1>
+  
+  <div class="button-group">
+    <button class="quiz-button">Start Game</button>
+    <button class="quiz-button">Login</button>
+    <button class="quiz-button">Sign Up</button>
+  </div>
 
     </div>
 
