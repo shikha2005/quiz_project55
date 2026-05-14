@@ -165,9 +165,6 @@ def edit(id):
         conn.close()
 
         return redirect('/admin')
- @app.route('/mode')
- def mode():
-    return render_template('mode.html')
 
     # GET request (load existing data)
     cur.execute("SELECT * FROM questions WHERE id=?", (id,))
@@ -175,6 +172,10 @@ def edit(id):
     conn.close()
 
     return render_template('edit.html', q=question)
+    #mode
+@app.route('/mode')
+def mode():
+    return render_template('mode.html')
 if __name__ == '__main__':
     import os
     port = int(os.environ.get("PORT", 5000))
