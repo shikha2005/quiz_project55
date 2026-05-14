@@ -122,12 +122,13 @@ def signup():
         u = request.form['username']
         p = request.form['password']
     if len(p) < 5:
-       return "Password must be at least 5 characters"  
-        conn = sqlite3.connect('database.db')
-        cur = conn.cursor()
-        cur.execute("INSERT INTO users (username, password, role) VALUES (?, ?, 'user')", (u,p))
-        conn.commit()
-        conn.close()
+        return "Password must be at least 5 characters"  
+        
+     conn = sqlite3.connect('database.db')
+     cur = conn.cursor()
+     cur.execute("INSERT INTO users (username, password, role) VALUES (?, ?, 'user')", (u,p))
+     conn.commit()
+     conn.close()
 
         return redirect('/login')
 
