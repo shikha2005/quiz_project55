@@ -173,9 +173,13 @@ def edit(id):
 
     return render_template('edit.html', q=question)
     #mode
+# mode page
 @app.route('/mode')
 def mode():
     return render_template('mode.html')
+
+
+# keep this at the END of app.py
 if __name__ == '__main__':
     import os
     port = int(os.environ.get("PORT", 5000))
