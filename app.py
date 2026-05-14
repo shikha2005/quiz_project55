@@ -165,7 +165,7 @@ def edit(id):
         conn.close()
 
         return redirect('/admin')
-        @app.route('/mode')
+ @app.route('/mode')
  def mode():
     return render_template('mode.html')
 
