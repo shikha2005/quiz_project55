@@ -177,6 +177,10 @@ def edit(id):
 @app.route('/mode')
 def mode():
     return render_template('mode.html')
+    #character
+@app.route('/character_select')
+def character_select():
+    return render_template('character_select.html')
 
 
 # keep this at the END of app.py
