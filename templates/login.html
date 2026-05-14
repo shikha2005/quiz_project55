@@ -109,7 +109,17 @@
         <button type="submit">START GAME</button>
 
     </form>
+<script>
+function togglePassword() {
+    let pass = document.getElementById("password");
 
+    if (pass.type === "password") {
+        pass.type = "text";
+    } else {
+        pass.type = "password";
+    }
+}
+</script>
     <div class="link">
         <a href="/signup">Create Account</a>
     </div>
