@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Choose Game Mode</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial;
+        }
+
+        body{
+            height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            background:#080b1a;
+        }
+
+        /* Background video */
+        #bg-video{
+            position:fixed;
+            top:0;
+            left:0;
+            min-width:100%;
+            min-height:100%;
+            object-fit:cover;
+            z-index:-1;
+        }
+
+        .mode-container{
+            background:rgba(0,0,0,0.5);
+            padding:50px;
+            border-radius:20px;
+            text-align:center;
+
+            box-shadow:
+            0 0 20px red,
+            0 0 40px blue;
+        }
+
+        h1{
+            color:white;
+            margin-bottom:40px;
+            font-size:50px;
+
+            text-shadow:
+            0 0 20px red,
+            0 0 30px blue;
+        }
+
+        .mode-btn{
+            display:block;
+            width:300px;
+            margin:20px auto;
+            padding:18px;
+
+            border:none;
+            border-radius:12px;
+
+            background:#111;
+            color:white;
+
+            font-size:20px;
+            cursor:pointer;
+
+            border:2px solid cyan;
+
+            box-shadow:
+            0 0 10px cyan,
+            0 0 20px blue;
+
+            transition:0.3s;
+        }
+
+        .mode-btn:hover{
+            transform:scale(1.08);
+            background:red;
+        }
+
+        a{
+            text-decoration:none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <video autoplay muted loop id="bg-video">
+        <source src="{{ url_for('static', filename='videos/tt.mp4') }}" type="video/mp4">
+    </video>
+
+    <div class="mode-container">
+
+        <h1>CHOOSE GAME MODE</h1>
+
+        <a href="/battle_mode">
+            <button class="mode-btn">⚔ Battle Mode</button>
+        </a>
+
+        <a href="/survival_mode">
+            <button class="mode-btn">🔥 Survival Mode</button>
+        </a>
+
+        <a href="/time_attack">
+            <button class="mode-btn">⏱ Time Attack</button>
+        </a>
+
+    </div>
+
+</body>
+</html>
