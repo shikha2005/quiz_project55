@@ -30,7 +30,7 @@ def login():
             if user[3] == 'admin':
                 return redirect('/admin')
             else:
-                return redirect('/quiz')
+                return redirect('/mode')
         else:
             return "Invalid Login"
 
