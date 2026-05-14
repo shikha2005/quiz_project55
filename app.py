@@ -115,11 +115,14 @@ def delete(id):
 def logout():
     session.clear()
     return redirect('/')
+    #SIGN UP
 @app.route('/signup', methods=['GET','POST'])
 def signup():
     if request.method == 'POST':
         u = request.form['username']
         p = request.form['password']
+      if len(p) < 5:
+    return "Password must be at least 5 characters"  
 
         conn = sqlite3.connect('database.db')
         cur = conn.cursor()
