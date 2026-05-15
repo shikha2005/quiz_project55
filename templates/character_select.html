@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Character Selection</title>
+    <title>Choose Fighters</title>
 
     <style>
 
@@ -14,51 +14,135 @@
 
         body{
             height:100vh;
+            background:url("/static/images/mode.jpg") no-repeat center center;
+            background-size:cover;
+
             display:flex;
             justify-content:center;
             align-items:center;
-
-            background:url("/static/images/mode.jpg") no-repeat center center;
-            background-size:cover;
         }
 
-        .select-box{
-            background:rgba(0,0,0,0.7);
-            padding:50px;
+        .main-box{
+            width:90%;
+            max-width:1200px;
+
+            background:rgba(0,0,0,0.45);
+
+            backdrop-filter:blur(12px);
+            -webkit-backdrop-filter:blur(12px);
+
             border-radius:20px;
-            text-align:center;
+
+            padding:30px;
 
             box-shadow:
-            0 0 20px red,
-            0 0 40px blue;
+            0 0 20px rgba(255,0,0,0.4),
+            0 0 20px rgba(0,100,255,0.4);
         }
 
-        h1{
+        .selection-area{
+            display:flex;
+            justify-content:space-between;
+            gap:30px;
+        }
+
+        .side{
+            width:48%;
+            text-align:center;
+        }
+
+        h2{
             color:white;
-            margin-bottom:30px;
-            font-size:40px;
+            margin-bottom:25px;
+            font-size:32px;
         }
 
-        select{
-            width:300px;
-            padding:15px;
-            margin:15px;
-            border-radius:10px;
-            font-size:18px;
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:20px;
         }
 
-        button{
-            margin-top:20px;
-            padding:15px 30px;
+        .hero-card{
+            background:rgba(255,255,255,0.08);
 
-            border:none;
-            border-radius:10px;
-
-            background:#111;
-            color:white;
+            backdrop-filter:blur(10px);
 
             border:2px solid cyan;
+
+            border-radius:15px;
+
+            padding:25px;
+
+            color:white;
+
             cursor:pointer;
+
+            box-shadow:
+            0 0 10px cyan,
+            0 0 20px blue;
+
+            transition:0.3s;
+        }
+
+        .hero-card:hover{
+            transform:scale(1.08);
+        }
+
+        .enemy-card{
+            background:rgba(255,255,255,0.08);
+
+            backdrop-filter:blur(10px);
+
+            border:2px solid red;
+
+            border-radius:15px;
+
+            padding:25px;
+
+            color:white;
+
+            cursor:pointer;
+
+            box-shadow:
+            0 0 10px red,
+            0 0 20px orange;
+
+            transition:0.3s;
+        }
+
+        .enemy-card:hover{
+            transform:scale(1.08);
+        }
+
+        .start-btn{
+            display:block;
+
+            margin:40px auto 0 auto;
+
+            padding:18px 40px;
+
+            border:none;
+            border-radius:12px;
+
+            background:#111;
+
+            color:white;
+
+            font-size:20px;
+
+            cursor:pointer;
+
+            border:2px solid gold;
+
+            box-shadow:
+            0 0 10px gold,
+            0 0 20px orange;
+        }
+
+        .start-btn:hover{
+            transform:scale(1.08);
+            background:red;
         }
 
     </style>
@@ -67,33 +151,54 @@
 
 <body>
 
-    <div class="select-box">
+    <div class="main-box">
 
-        <h1>SELECT FIGHTERS</h1>
+        <div class="selection-area">
 
-        <form action="/battle_mode" method="GET">
+            <!-- HERO SIDE -->
+            <div class="side">
 
-            <select name="player1">
-                <option>Iron Man</option>
-                <option>Thor</option>
-                <option>Captain America</option>
-                <option>Hulk</option>
-            </select>
+                <h2>CHOOSE HERO</h2>
 
-            <br>
+                <div class="cards">
 
-            <select name="player2">
-                <option>Thanos</option>
-                <option>Loki</option>
-                <option>Ultron</option>
-                <option>Red Skull</option>
-            </select>
+                    <div class="hero-card">IRON MAN</div>
 
-            <br>
+                    <div class="hero-card">THOR</div>
 
-            <button type="submit">START BATTLE</button>
+                    <div class="hero-card">HULK</div>
 
-        </form>
+                    <div class="hero-card">CAPTAIN AMERICA</div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ENEMY SIDE -->
+            <div class="side">
+
+                <h2>CHOOSE ENEMY</h2>
+
+                <div class="cards">
+
+                    <div class="enemy-card">THANOS</div>
+
+                    <div class="enemy-card">LOKI</div>
+
+                    <div class="enemy-card">ULTRON</div>
+
+                    <div class="enemy-card">RED SKULL</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <a href="/battle_mode">
+            <button class="start-btn">START QUIZ BATTLE</button>
+        </a>
 
     </div>
 
