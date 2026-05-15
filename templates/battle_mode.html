@@ -5,127 +5,44 @@
 
     <style>
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial;
-        }
-
         body{
-            height:100vh;
             background:black;
             color:white;
-        }
-
-        .battle-container{
-            width:100%;
-            height:100vh;
-
-            display:flex;
-            flex-direction:column;
-            justify-content:space-between;
-
+            font-family:Arial;
+            margin:0;
             padding:30px;
         }
 
-        /* TOP PLAYERS */
         .fighters{
             display:flex;
             justify-content:space-between;
-            align-items:center;
+            margin-bottom:40px;
         }
 
         .fighter{
             text-align:center;
-            width:250px;
         }
 
-        .fighter img{
-            width:200px;
-            height:250px;
-            object-fit:cover;
+        img{
+            width:180px;
+            height:220px;
             border-radius:15px;
         }
 
-        .hero img{
-            border:3px solid cyan;
-
-            box-shadow:
-            0 0 15px cyan,
-            0 0 30px blue;
-        }
-
-        .enemy img{
-            border:3px solid red;
-
-            box-shadow:
-            0 0 15px red,
-            0 0 30px orange;
-        }
-
-        .name{
-            font-size:24px;
-            margin-top:15px;
-            font-weight:bold;
-        }
-
-        .hp{
-            margin-top:10px;
-            font-size:20px;
-        }
-
-        /* QUESTION BOX */
         .quiz-box{
-            width:70%;
-            margin:auto;
-
-            background:rgba(255,255,255,0.05);
-
-            border-radius:20px;
-
-            padding:40px;
-
             text-align:center;
-
-            box-shadow:
-            0 0 15px purple;
-        }
-
-        .question{
-            font-size:28px;
-            margin-bottom:30px;
-        }
-
-        .option-btn{
-            display:block;
-
-            width:80%;
-
-            margin:15px auto;
-
-            padding:15px;
-
-            border:none;
-            border-radius:10px;
-
             background:#111;
-
-            color:white;
-
-            font-size:18px;
-
-            cursor:pointer;
-
-            border:2px solid gold;
-
-            box-shadow:
-            0 0 10px gold;
+            padding:30px;
+            border-radius:20px;
         }
 
-        .option-btn:hover{
-            transform:scale(1.05);
-            background:#222;
+        button{
+            display:block;
+            width:60%;
+            margin:15px auto;
+            padding:15px;
+            font-size:18px;
+            cursor:pointer;
         }
 
     </style>
@@ -134,55 +51,52 @@
 
 <body>
 
-<div class="battle-container">
-
-    <!-- TOP -->
     <div class="fighters">
 
-        <!-- HERO -->
-        <div class="fighter hero">
+        <div class="fighter">
 
             <img src="/static/images/characters/ironman.jpg">
 
-            <div class="name">IRON MAN</div>
+            <h2>IRON MAN</h2>
 
-            <div class="hp">❤️ HP: 100</div>
+            <h3>HP: {{ player_hp }}</h3>
 
         </div>
 
 
-        <!-- ENEMY -->
-        <div class="fighter enemy">
+        <div class="fighter">
 
             <img src="/static/images/characters/thanos.jpg">
 
-            <div class="name">THANOS</div>
+            <h2>THANOS</h2>
 
-            <div class="hp">❤️ HP: 100</div>
+            <h3>HP: {{ enemy_hp }}</h3>
 
         </div>
 
     </div>
 
 
-    <!-- QUIZ -->
     <div class="quiz-box">
 
-        <div class="question">
-            Which cloud model provides virtual machines?
-        </div>
+        <h2>Question {{ q_no }}/10</h2>
 
-        <button class="option-btn">A. SaaS</button>
+        <h3>{{ question }}</h3>
 
-        <button class="option-btn">B. IaaS</button>
 
-        <button class="option-btn">C. PaaS</button>
+        <form method="POST">
 
-        <button class="option-btn">D. Hybrid</button>
+            <button name="answer" value="A">{{ option1 }}</button>
+
+            <button name="answer" value="B">{{ option2 }}</button>
+
+            <button name="answer" value="C">{{ option3 }}</button>
+
+            <button name="answer" value="D">{{ option4 }}</button>
+
+        </form>
 
     </div>
-
-</div>
 
 </body>
 </html>
