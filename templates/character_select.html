@@ -204,64 +204,66 @@
     <div class="selection-area">
 
         <div class="side">
-            <h2>CHOOSE HERO</h2>
-            
-            <div class="scene">
-                <button class="nav-btn prev-btn" onclick="moveCarousel('hero', -1)">&#10094;</button>
-                
-                <div class="carousel" id="hero-carousel">
-                   <div class="hero-card" onclick="selectHero('ironman')">
-                        <img src="/static/images/characters/ironman.jpg">
-                        <div class="name">IRON MAN</div>
-                    </div>
-                  <div class="hero-card" onclick="selectHero('thor')">
-                        <img src="/static/images/characters/thor.jpg">
-                        <div class="name">THOR</div>
-                    </div>
-                  <div class="hero-card" onclick="selectHero('spiderman')">
-                        <img src="/static/images/characters/spiderman.jpg">
-                        <div class="name">SPIDER MAN</div>
-                    </div>
-                   <div class="hero-card" onclick="selectHero('wanda')">
-                        <img src="/static/images/characters/wanda.jpg">
-                        <div class="name">WANDA</div>
-                    </div>
-                </div>
-
-                <button class="nav-btn next-btn" onclick="moveCarousel('hero', 1)">&#10095;</button>
+    <h2>CHOOSE HERO</h2>
+    
+    <div class="scene">
+        <button class="nav-btn prev-btn" onclick="moveCarousel('hero', -1)">&#10094;</button>
+        
+        <div class="carousel" id="hero-carousel">
+            <div class="card hero-card" onclick="selectHero('ironman')">
+                <img src="/static/images/characters/ironman.jpg">
+                <div class="name">IRON MAN</div>
             </div>
-            
-            <div class="holo-base"></div>
+            <div class="card hero-card" onclick="selectHero('thor')">
+                <img src="/static/images/characters/thor.jpg">
+                <div class="name">THOR</div>
+            </div>
+            <div class="card hero-card" onclick="selectHero('spiderman')">
+                <img src="/static/images/characters/spiderman.jpg">
+                <div class="name">SPIDER MAN</div>
+            </div>
+            <div class="card hero-card" onclick="selectHero('wanda')">
+                <img src="/static/images/characters/wanda.jpg">
+                <div class="name">WANDA</div>
+            </div>
         </div>
 
-        <div class="side">
-            <h2>CHOOSE ENEMY</h2>
-            
-            <div class="scene">
-                <button class="nav-btn prev-btn" onclick="moveCarousel('enemy', -1)">&#10094;</button>
+        <button class="nav-btn next-btn" onclick="moveCarousel('hero', 1)">&#10095;</button>
+    </div>
+    
+    <div class="holo-base"></div>
+</div>
 
-                <div class="carousel" id="enemy-carousel">
-                    <div class="enemy-card" onclick="selectEnemy('thanos')">
-                        <img src="/static/images/characters/thanos.jpg">
-                        <div class="name">THANOS</div>
-                    </div>
-                   <div class="enemy-card" onclick="selectEnemy('loki')">
-                        <img src="/static/images/characters/loki.jpg">
-                        <div class="name">LOKI</div>
-                    </div>
-                  <div class="enemy-card" onclick="selectEnemy('ultron')">
-                        <img src="/static/images/characters/Ultron.jpg">
-                        <div class="name">ULTRON</div>
-                    </div>
-                   <div class="enemy-card" onclick="selectEnemy('doctor doom')">
-                        <img src="/static/images/characters/doctordom.jpg">
-                        <div class="name">DOCTOR DOOM</div>
-                    </div>
-                </div>
+<div class="side">
+    <h2>CHOOSE ENEMY</h2>
+    
+    <div class="scene">
+        <button class="nav-btn prev-btn" onclick="moveCarousel('enemy', -1)">&#10094;</button>
 
-                <button class="nav-btn next-btn" onclick="moveCarousel('enemy', 1)">&#10095;</button>
+        <div class="carousel" id="enemy-carousel">
+            <div class="card enemy-card" onclick="selectEnemy('thanos')">
+                <img src="/static/images/characters/thanos.jpg">
+                <div class="name">THANOS</div>
             </div>
+            <div class="card enemy-card" onclick="selectEnemy('loki')">
+                <img src="/static/images/characters/loki.jpg">
+                <div class="name">LOKI</div>
+            </div>
+            <div class="card enemy-card" onclick="selectEnemy('ultron')">
+                <img src="/static/images/characters/Ultron.jpg">
+                <div class="name">ULTRON</div>
+            </div>
+            <div class="card enemy-card" onclick="selectEnemy('doctor doom')">
+                <img src="/static/images/characters/doctordom.jpg">
+                <div class="name">DOCTOR DOOM</div>
+            </div>
+        </div>
 
+        <button class="nav-btn next-btn" onclick="moveCarousel('enemy', 1)">&#10095;</button>
+    </div>
+
+    <div class="holo-base"></div>
+</div>
             <div class="holo-base"></div>
         </div>
 
