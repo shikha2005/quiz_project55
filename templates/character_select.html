@@ -14,8 +14,7 @@
 
         body{
             height:100vh;
-            background:url("/static/images/mode.jpg") no-repeat center center;
-            background-size:cover;
+            background:black;
 
             display:flex;
             justify-content:center;
@@ -23,27 +22,26 @@
         }
 
         .main-box{
-            width:90%;
-            max-width:1200px;
+            width:95%;
+            max-width:1400px;
 
-            background:rgba(0,0,0,0.45);
+            background:rgba(255,255,255,0.05);
 
-            backdrop-filter:blur(12px);
-            -webkit-backdrop-filter:blur(12px);
+            backdrop-filter:blur(15px);
 
             border-radius:20px;
 
             padding:30px;
 
             box-shadow:
-            0 0 20px rgba(255,0,0,0.4),
-            0 0 20px rgba(0,100,255,0.4);
+            0 0 20px blue,
+            0 0 20px red;
         }
 
         .selection-area{
             display:flex;
             justify-content:space-between;
-            gap:30px;
+            gap:40px;
         }
 
         .side{
@@ -53,8 +51,8 @@
 
         h2{
             color:white;
+            font-size:40px;
             margin-bottom:25px;
-            font-size:32px;
         }
 
         .cards{
@@ -63,77 +61,64 @@
             gap:20px;
         }
 
-        .hero-card{
-            background:rgba(255,255,255,0.08);
-
-            backdrop-filter:blur(10px);
-
-            border:2px solid cyan;
-
+        .hero-card,
+        .enemy-card{
+            background:#111;
             border-radius:15px;
-
-            padding:25px;
-
-            color:white;
-
+            padding:15px;
             cursor:pointer;
+            transition:0.3s;
+        }
+
+        .hero-card{
+            border:2px solid cyan;
 
             box-shadow:
             0 0 10px cyan,
             0 0 20px blue;
-
-            transition:0.3s;
-        }
-
-        .hero-card:hover{
-            transform:scale(1.08);
         }
 
         .enemy-card{
-            background:rgba(255,255,255,0.08);
-
-            backdrop-filter:blur(10px);
-
             border:2px solid red;
-
-            border-radius:15px;
-
-            padding:25px;
-
-            color:white;
-
-            cursor:pointer;
 
             box-shadow:
             0 0 10px red,
             0 0 20px orange;
-
-            transition:0.3s;
         }
 
+        .hero-card:hover,
         .enemy-card:hover{
             transform:scale(1.08);
         }
 
+        img{
+            width:100%;
+            height:220px;
+            object-fit:cover;
+            border-radius:10px;
+        }
+
+        .name{
+            color:white;
+            font-size:18px;
+            font-weight:bold;
+            margin-top:10px;
+        }
+
         .start-btn{
             display:block;
-
             margin:40px auto 0 auto;
 
             padding:18px 40px;
 
-            border:none;
-            border-radius:12px;
-
             background:#111;
-
             color:white;
 
-            font-size:20px;
-
-            cursor:pointer;
-
             border:2px solid gold;
+            border-radius:12px;
+
+            font-size:22px;
+            cursor:pointer;
 
             box-shadow:
             0 0 10px gold,
@@ -142,7 +127,10 @@
 
         .start-btn:hover{
             transform:scale(1.08);
-            background:red;
+        }
+
+        a{
+            text-decoration:none;
         }
 
     </style>
@@ -151,56 +139,80 @@
 
 <body>
 
-    <div class="main-box">
+<div class="main-box">
 
-        <div class="selection-area">
+    <div class="selection-area">
 
-            <!-- HERO SIDE -->
-            <div class="side">
+        <!-- HERO -->
+        <div class="side">
 
-                <h2>CHOOSE HERO</h2>
+            <h2>CHOOSE HERO</h2>
 
-                <div class="cards">
+            <div class="cards">
 
-                    <div class="hero-card">IRON MAN</div>
-
-                    <div class="hero-card">THOR</div>
-
-                    <div class="hero-card">HULK</div>
-
-                    <div class="hero-card">CAPTAIN AMERICA</div>
-
+                <div class="hero-card">
+                    <img src="/static/images/characters/ironman.jpg">
+                    <div class="name">IRON MAN</div>
                 </div>
 
-            </div>
+                <div class="hero-card">
+                    <img src="/static/images/characters/thor.jpg">
+                    <div class="name">THOR</div>
+                </div>
 
+                <div class="hero-card">
+                    <img src="/static/images/characters/spiderman.jpg">
+                    <div class="name">SPIDER MAN</div>
+                </div>
 
-            <!-- ENEMY SIDE -->
-            <div class="side">
-
-                <h2>CHOOSE ENEMY</h2>
-
-                <div class="cards">
-
-                    <div class="enemy-card">THANOS</div>
-
-                    <div class="enemy-card">LOKI</div>
-
-                    <div class="enemy-card">ULTRON</div>
-
-                    <div class="enemy-card">RED SKULL</div>
-
+                <div class="hero-card">
+                    <img src="/static/images/characters/wanda.jpg">
+                    <div class="name">WANDA</div>
                 </div>
 
             </div>
 
         </div>
 
-        <a href="/battle_mode">
-            <button class="start-btn">START QUIZ BATTLE</button>
-        </a>
+
+        <!-- ENEMY -->
+        <div class="side">
+
+            <h2>CHOOSE ENEMY</h2>
+
+            <div class="cards">
+
+                <div class="enemy-card">
+                    <img src="/static/images/characters/thanos.jpg">
+                    <div class="name">THANOS</div>
+                </div>
+
+                <div class="enemy-card">
+                    <img src="/static/images/characters/loki.jpg">
+                    <div class="name">LOKI</div>
+                </div>
+
+                <div class="enemy-card">
+                    <img src="/static/images/characters/ultron.jpg">
+                    <div class="name">ULTRON</div>
+                </div>
+
+                <div class="enemy-card">
+                    <img src="/static/images/characters/doctordom.jpg">
+                    <div class="name">DOCTOR DOOM</div>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
+
+    <a href="/battle_mode">
+        <button class="start-btn">START QUIZ BATTLE</button>
+    </a>
+
+</div>
 
 </body>
 </html>
