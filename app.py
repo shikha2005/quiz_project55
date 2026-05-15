@@ -5,60 +5,6 @@ import os
 app = Flask(__name__, static_folder='static')
 app.secret_key = "secret"
 
-# --- 10 CLOUD COMPUTING QUESTIONS FOR BATTLE MODE ---
-CLOUD_QUESTIONS = [
-    {
-        "q": "Which computing model combines multiple computers to solve one task?",
-        "options": {"A": "Database Computing", "B": "Parallel Computing", "C": "Word Computing", "D": "Mobile Computing"},
-        "answer": "B"
-    },
-    {
-        "q": "Cloud computing has how many essential characteristics?",
-        "options": {"A": "2", "B": "3", "C": "5", "D": "7"},
-        "answer": "C"
-    },
-    {
-        "q": "Which is NOT a cloud deployment model?",
-        "options": {"A": "Private Cloud", "B": "Hybrid Cloud", "C": "Community Cloud", "D": "Binary Cloud"},
-        "answer": "D"
-    },
-    {
-        "q": "What does IaaS stand for?",
-        "options": {"A": "Internet as a Service", "B": "Infrastructure as a Service", "C": "Internal as a Service", "D": "Information as a Service"},
-        "answer": "B"
-    },
-    {
-        "q": "Which company developed VMware?",
-        "options": {"A": "Google", "B": "VMware", "C": "Facebook", "D": "Oracle"},
-        "answer": "B"
-    },
-    {
-        "q": "Which virtualization uses a hypervisor?",
-        "options": {"A": "Full Virtualization", "B": "Mobile Computing", "C": "Nano Computing", "D": "Optical Computing"},
-        "answer": "A"
-    },
-    {
-        "q": "Which is a cloud platform by Google?",
-        "options": {"A": "Google App Engine", "B": "Google Paint", "C": "Google Docs", "D": "Google Search"},
-        "answer": "A"
-    },
-    {
-        "q": "Web 3.0 focuses on:",
-        "options": {"A": "Semantic Web", "B": "CDs", "C": "Printers", "D": "Mouse"},
-        "answer": "A"
-    },
-    {
-        "q": "Which service is provided by Amazon?",
-        "options": {"A": "Amazon EC2", "B": "Amazon Word", "C": "Amazon Paint", "D": "Amazon DOS"},
-        "answer": "A"
-    },
-    {
-        "q": "What is the brain of virtualization?",
-        "options": {"A": "Firewall", "B": "Hypervisor", "C": "Router", "D": "Browser"},
-        "answer": "B"
-    }
-]
-
 # HOME
 @app.route('/')
 def home():
@@ -238,7 +184,14 @@ def character_select():
 # BATTLE MODE
 @app.route('/battle_mode', methods=['GET', 'POST'])
 def battle_mode():
-    # 1. If we receive hero and enemy in the URL via GET, it means a NEW game is starting from the character select screen.
+    # 1. Fetch all questions from the database
+    conn = sqlite3.connect('database.db')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM questions")
+    db_questions = cur.fetchall()
+    conn.close()
+
+    # 2. If we receive hero and enemy in the URL via GET, start a NEW game
     if request.method == 'GET' and request.args.get('hero'):
         session['q_no'] = 1
         session['player_hp'] = 100
@@ -246,44 +199,51 @@ def battle_mode():
         session['hero'] = request.args.get('hero')
         session['enemy'] = request.args.get('enemy')
 
-    # Safety catch: if they try to access this page directly without going through character selection
+    # Safety catch: redirect if they didn't go through character selection
     if 'q_no' not in session:
         return redirect('/character_select')
 
-    # 2. Handle Answer Submission
+    # 3. Handle Answer Submission
     if request.method == 'POST':
         user_answer = request.form.get('answer')
         current_q_index = session['q_no'] - 1
 
         # Check the answer and adjust HP
-        if current_q_index < len(CLOUD_QUESTIONS):
-            correct_answer = CLOUD_QUESTIONS[current_q_index]['answer']
+        if current_q_index < len(db_questions):
+            # In our DB setup, the correct answer is the 7th column (index 6)
+            correct_answer = db_questions[current_q_index][6]
 
             if user_answer == correct_answer:
-                session['enemy_hp'] -= 10
+                session['enemy_hp'] -= 20
             else:
-                session['player_hp'] -= 10
+                session['player_hp'] -= 20
             
             # Advance to the next question
             session['q_no'] += 1
 
-    # 3. Check Game Over / Victory Conditions (Inline basic HTML so you don't need extra templates yet)
+    # 4. Check Game Over / Victory / Draw Conditions
     if session['player_hp'] <= 0:
-        session.pop('q_no', None) # Clear battle state
+        session.pop('q_no', None) 
         return "<body style='background:black; color:red; text-align:center; font-family:Arial; padding-top:100px;'><h1>Game Over! You lost.</h1><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
     
     if session['enemy_hp'] <= 0:
         session.pop('q_no', None)
         return "<body style='background:black; color:#00f3ff; text-align:center; font-family:Arial; padding-top:100px;'><h1>Victory! You defeated the enemy!</h1><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
     
-    if session['q_no'] > len(CLOUD_QUESTIONS):
+    if session['q_no'] > len(db_questions):
         session.pop('q_no', None)
         return "<body style='background:black; color:white; text-align:center; font-family:Arial; padding-top:100px;'><h1>It's a Draw! Out of questions.</h1><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
 
-    # 4. Prepare the next question to render
+    # 5. Prepare the next question to render
     current_q_index = session['q_no'] - 1
-    question_data = CLOUD_QUESTIONS[current_q_index]
+    question_data = db_questions[current_q_index]
 
+    # In our DB setup:
+    # question_data[1] = the question text
+    # question_data[2] = Option 1
+    # question_data[3] = Option 2
+    # question_data[4] = Option 3
+    # question_data[5] = Option 4
     return render_template(
         'battle_mode.html',
         hero=session['hero'],
@@ -291,11 +251,11 @@ def battle_mode():
         player_hp=session['player_hp'],
         enemy_hp=session['enemy_hp'],
         q_no=session['q_no'],
-        question=question_data['q'],
-        option1=question_data['options']['A'],
-        option2=question_data['options']['B'],
-        option3=question_data['options']['C'],
-        option4=question_data['options']['D']
+        question=question_data[1],
+        option1=question_data[2],
+        option2=question_data[3],
+        option3=question_data[4],
+        option4=question_data[5]
     )
 
 # keep this at the END of app.py
