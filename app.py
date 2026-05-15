@@ -181,6 +181,19 @@ def mode():
 @app.route('/character_select')
 def character_select():
     return render_template('character_select.html')
+    @app.route('/battle_mode')
+def battle_mode():
+
+    hero = request.args.get('hero')
+    enemy = request.args.get('enemy')
+
+    return render_template(
+        'battle_mode.html',
+        hero=hero,
+        enemy=enemy,
+        player_hp=100,
+        enemy_hp=100
+    )
 
 
 # keep this at the END of app.py
