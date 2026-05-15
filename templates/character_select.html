@@ -4,206 +4,262 @@
     <title>Choose Fighters</title>
 
     <style>
-
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
-        body{
-            height:100vh;
-            background:black;
-
-            display:flex;
-            justify-content:center;
-            align-items:center;
+        body {
+            height: 100vh;
+            background: #050a15; /* Darker background to make neon pop */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevent scrolling from 3D elements */
         }
 
-        .main-box{
-            width:95%;
-            max-width:1400px;
-
-            background:rgba(255,255,255,0.05);
-
-            backdrop-filter:blur(15px);
-
-            border-radius:20px;
-
-            padding:30px;
-
-            box-shadow:
-            0 0 20px blue,
-            0 0 20px red;
+        .main-box {
+            width: 95%;
+            max-width: 1400px;
+            background: rgba(10, 20, 40, 0.6); /* Sci-fi dark glass */
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: inset 0 0 50px rgba(0, 255, 255, 0.1), 0 0 20px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.2);
         }
 
-        .selection-area{
-            display:flex;
-            justify-content:space-between;
-            gap:40px;
+        .selection-area {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
         }
 
-        .side{
-            width:48%;
-            text-align:center;
+        .side {
+            width: 45%;
+            text-align: center;
+            position: relative;
         }
 
-        h2{
-            color:white;
-            font-size:40px;
-            margin-bottom:25px;
+        h2 {
+            color: #fff;
+            font-size: 32px;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px cyan;
+            letter-spacing: 2px;
         }
 
-        .cards{
-            display:grid;
-            grid-template-columns:repeat(2,1fr);
-            gap:20px;
+        /* --- 3D Carousel Styles --- */
+        .scene {
+            position: relative;
+            width: 100%;
+            height: 300px; /* Height of the cards */
+            perspective: 1000px; /* Crucial for 3D depth */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .hero-card,
-        .enemy-card{
-            background:#111;
-            border-radius:15px;
-            padding:15px;
-            cursor:pointer;
-            transition:0.3s;
+        .carousel {
+            position: relative;
+            width: 200px;
+            height: 280px;
+            transform-style: preserve-3d;
         }
 
-        .hero-card{
-            border:2px solid cyan;
-
-            box-shadow:
-            0 0 10px cyan,
-            0 0 20px blue;
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 10, 20, 0.8);
+            border-radius: 15px;
+            padding: 10px;
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.5s ease-in-out, box-shadow 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
 
-        .enemy-card{
-            border:2px solid red;
+        /* Specific glow for Heroes and Enemies */
+        .hero-card {
+            border: 2px solid #00f3ff;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4), inset 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+        .hero-card.active { box-shadow: 0 0 30px #00f3ff, inset 0 0 30px #00f3ff; }
 
-            box-shadow:
-            0 0 10px red,
-            0 0 20px orange;
+        .enemy-card {
+            border: 2px solid #ff003c;
+            box-shadow: 0 0 15px rgba(255, 0, 60, 0.4), inset 0 0 20px rgba(255, 0, 60, 0.2);
+        }
+        .enemy-card.active { box-shadow: 0 0 30px #ff003c, inset 0 0 30px #ff003c; }
+
+        img {
+            width: 100%;
+            height: 80%;
+            object-fit: cover;
+            border-radius: 8px;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
         }
 
-        .hero-card:hover,
-        .enemy-card:hover{
-            transform:scale(1.08);
+        .name {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: auto;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
         }
 
-        img{
-            width:100%;
-            height:220px;
-            object-fit:cover;
-            border-radius:10px;
+        .hero-card .name { text-shadow: 0 0 5px #00f3ff; }
+        .enemy-card .name { text-shadow: 0 0 5px #ff003c; }
+
+        /* Navigation Arrows */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid cyan;
+            color: cyan;
+            font-size: 20px;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 100;
+            transition: 0.3s;
+        }
+        
+        .side:nth-child(2) .nav-btn {
+            border-color: #ff003c;
+            color: #ff003c;
         }
 
-        .name{
-            color:white;
-            font-size:18px;
-            font-weight:bold;
-            margin-top:10px;
+        .nav-btn:hover {
+            background: cyan;
+            color: black;
+            box-shadow: 0 0 15px cyan;
         }
 
-        .start-btn{
-            display:block;
-            margin:40px auto 0 auto;
-
-            padding:18px 40px;
-
-            background:#111;
-            color:white;
-
-            border:2px solid gold;
-            border-radius:12px;
-
-            font-size:22px;
-            cursor:pointer;
-
-            box-shadow:
-            0 0 10px gold,
-            0 0 20px orange;
+        .side:nth-child(2) .nav-btn:hover {
+            background: #ff003c;
+            color: white;
+            box-shadow: 0 0 15px #ff003c;
         }
 
-        .start-btn:hover{
-            transform:scale(1.08);
+        .prev-btn { left: -20px; }
+        .next-btn { right: -20px; }
+
+        /* Holographic Base from your image */
+        .holo-base {
+            width: 250px;
+            height: 40px;
+            margin: 20px auto 0 auto;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at center, rgba(0, 243, 255, 0.4) 0%, rgba(0,0,0,0) 70%);
+            box-shadow: 0 20px 30px rgba(0, 243, 255, 0.2);
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            transform: rotateX(70deg); /* Lays it flat */
         }
 
-        a{
-            text-decoration:none;
+        .side:nth-child(2) .holo-base {
+            background: radial-gradient(ellipse at center, rgba(255, 0, 60, 0.4) 0%, rgba(0,0,0,0) 70%);
+            box-shadow: 0 20px 30px rgba(255, 0, 60, 0.2);
+            border: 2px solid rgba(255, 0, 60, 0.3);
         }
 
+        .start-btn {
+            display: block;
+            margin: 50px auto 0 auto;
+            padding: 18px 50px;
+            background: transparent;
+            color: white;
+            border: 2px solid gold;
+            border-radius: 12px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5), inset 0 0 15px rgba(255, 215, 0, 0.2);
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 30px gold, inset 0 0 20px gold;
+        }
+
+        a { text-decoration: none; }
     </style>
-
 </head>
-
 <body>
 
 <div class="main-box">
-
     <div class="selection-area">
 
-        <!-- HERO -->
         <div class="side">
-
             <h2>CHOOSE HERO</h2>
-
-            <div class="cards">
-
-                <div class="hero-card">
-                    <img src="/static/images/characters/ironman.jpg">
-                    <div class="name">IRON MAN</div>
+            
+            <div class="scene">
+                <button class="nav-btn prev-btn" onclick="moveCarousel('hero', -1)">&#10094;</button>
+                
+                <div class="carousel" id="hero-carousel">
+                    <div class="card hero-card">
+                        <img src="/static/images/characters/ironman.jpg">
+                        <div class="name">IRON MAN</div>
+                    </div>
+                    <div class="card hero-card">
+                        <img src="/static/images/characters/thor.jpg">
+                        <div class="name">THOR</div>
+                    </div>
+                    <div class="card hero-card">
+                        <img src="/static/images/characters/hulk.jpg">
+                        <div class="name">HULK</div>
+                    </div>
+                    <div class="card hero-card">
+                        <img src="/static/images/characters/captain.jpg">
+                        <div class="name">CAPTAIN</div>
+                    </div>
                 </div>
 
-                <div class="hero-card">
-                    <img src="/static/images/characters/thor.jpg">
-                    <div class="name">THOR</div>
-                </div>
-
-                <div class="hero-card">
-                    <img src="/static/images/characters/spiderman.jpg">
-                    <div class="name">SPIDER MAN</div>
-                </div>
-
-                <div class="hero-card">
-                    <img src="/static/images/characters/wanda.jpg">
-                    <div class="name">WANDA</div>
-                </div>
-
+                <button class="nav-btn next-btn" onclick="moveCarousel('hero', 1)">&#10095;</button>
             </div>
-
+            
+            <div class="holo-base"></div>
         </div>
 
-
-        <!-- ENEMY -->
         <div class="side">
-
             <h2>CHOOSE ENEMY</h2>
+            
+            <div class="scene">
+                <button class="nav-btn prev-btn" onclick="moveCarousel('enemy', -1)">&#10094;</button>
 
-            <div class="cards">
-
-                <div class="enemy-card">
-                    <img src="/static/images/characters/thanos.jpg">
-                    <div class="name">THANOS</div>
+                <div class="carousel" id="enemy-carousel">
+                    <div class="card enemy-card">
+                        <img src="/static/images/characters/thanos.jpg">
+                        <div class="name">THANOS</div>
+                    </div>
+                    <div class="card enemy-card">
+                        <img src="/static/images/characters/loki.jpg">
+                        <div class="name">LOKI</div>
+                    </div>
+                    <div class="card enemy-card">
+                        <img src="/static/images/characters/ultron.jpg">
+                        <div class="name">ULTRON</div>
+                    </div>
+                    <div class="card enemy-card">
+                        <img src="/static/images/characters/redskull.jpg">
+                        <div class="name">RED SKULL</div>
+                    </div>
                 </div>
 
-                <div class="enemy-card">
-                    <img src="/static/images/characters/loki.jpg">
-                    <div class="name">LOKI</div>
-                </div>
-
-                <div class="enemy-card">
-                    <img src="/static/images/characters/ultron.jpg">
-                    <div class="name">ULTRON</div>
-                </div>
-
-                <div class="enemy-card">
-                    <img src="/static/images/characters/doctordom.jpg">
-                    <div class="name">DOCTOR DOOM</div>
-                </div>
-
+                <button class="nav-btn next-btn" onclick="moveCarousel('enemy', 1)">&#10095;</button>
             </div>
 
+            <div class="holo-base"></div>
         </div>
 
     </div>
@@ -211,8 +267,61 @@
     <a href="/battle_mode">
         <button class="start-btn">START QUIZ BATTLE</button>
     </a>
-
 </div>
+
+<script>
+    // State trackers for both carousels
+    const state = {
+        hero: { index: 0, cards: document.querySelectorAll('#hero-carousel .card') },
+        enemy: { index: 0, cards: document.querySelectorAll('#enemy-carousel .card') }
+    };
+
+    function updateCarousel(type) {
+        const { index, cards } = state[type];
+        
+        cards.forEach((card, i) => {
+            // Calculate distance from the center
+            let offset = i - index;
+            let absOffset = Math.abs(offset);
+
+            // 3D Math logic
+            let translateZ = -absOffset * 80;       // Push back in space
+            let translateX = offset * 110;          // Move left or right
+            let rotateY = offset * -20;             // Angle slightly inward
+            let scale = 1 - (absOffset * 0.1);      // Shrink outer cards
+            let opacity = absOffset > 1 ? 0.3 : 1;  // Dim outer cards
+            let zIndex = cards.length - absOffset;  // Keep center card on top
+
+            // Apply transformations
+            card.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+            card.style.opacity = opacity;
+            card.style.zIndex = zIndex;
+            
+            // Toggle active class for glowing effect
+            if(absOffset === 0) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
+            }
+        });
+    }
+
+    function moveCarousel(type, direction) {
+        const maxIndex = state[type].cards.length - 1;
+        
+        // Update index, bounded by 0 and maxIndex
+        state[type].index += direction;
+        
+        if (state[type].index < 0) state[type].index = 0;
+        if (state[type].index > maxIndex) state[type].index = maxIndex;
+
+        updateCarousel(type);
+    }
+
+    // Initialize both carousels on page load
+    updateCarousel('hero');
+    updateCarousel('enemy');
+</script>
 
 </body>
 </html>
