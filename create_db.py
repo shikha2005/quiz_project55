@@ -1,9 +1,14 @@
 import sqlite3
 
+# Connect to the database (this creates it if it doesn't exist)
 conn = sqlite3.connect('database.db')
 cur = conn.cursor()
 
-# Questions table
+# Drop existing tables so we start completely fresh without duplicates
+cur.execute('DROP TABLE IF EXISTS questions')
+cur.execute('DROP TABLE IF EXISTS users')
+
+# Create Questions table
 cur.execute('''
 CREATE TABLE questions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,7 +21,7 @@ CREATE TABLE questions (
 )
 ''')
 
-# Users table
+# Create Users table
 cur.execute('''
 CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,31 +31,29 @@ CREATE TABLE users (
 )
 ''')
 
-# Insert admin
+# Insert admin account
 cur.execute("INSERT INTO users (username, password, role) VALUES ('admin', 'admin123', 'admin')")
 
-# Insert 15 questions
-questions = [
-("What is Python?", "Programming Language", "Snake", "Game", "Car", "1"),
-("Capital of India?", "Mumbai", "Delhi", "Kolkata", "Chennai", "2"),
-("2 + 2 = ?", "3", "4", "5", "6", "2"),
-("Which is a database?", "MySQL", "HTML", "CSS", "JS", "1"),
-("Full form of CPU?", "Central Process Unit", "Central Processing Unit", "Computer Processing Unit", "Control Unit", "2"),
-("Which language is used for web?", "HTML", "Python", "C++", "Java", "1"),
-("Which is input device?", "Keyboard", "Monitor", "Printer", "Speaker", "1"),
-("Which is output device?", "Mouse", "Keyboard", "Monitor", "Scanner", "3"),
-("Which is OS?", "Windows", "Google", "CPU", "RAM", "1"),
-("Which is not programming language?", "Python", "Java", "HTML", "C++", "3"),
-("5 * 6 = ?", "30", "20", "25", "35", "1"),
-("Which is cloud platform?", "AWS", "MS Word", "Excel", "Notepad", "1"),
-("Which is AI example?", "Chatbot", "Calculator", "Mouse", "Keyboard", "1"),
-("Which is storage device?", "Hard Disk", "CPU", "Monitor", "Keyboard", "1"),
-("Which is mobile OS?", "Android", "Intel", "Oracle", "Python", "1")
+# Insert 10 Cloud Computing questions
+# Note: The correct_answer column uses "A", "B", "C", "D" to match your Battle Mode HTML buttons
+cloud_questions = [
+    ("Which computing model combines multiple computers to solve one task?", "Database Computing", "Parallel Computing", "Word Computing", "Mobile Computing", "B"),
+    ("Cloud computing has how many essential characteristics?", "2", "3", "5", "7", "C"),
+    ("Which is NOT a cloud deployment model?", "Private Cloud", "Hybrid Cloud", "Community Cloud", "Binary Cloud", "D"),
+    ("What does IaaS stand for?", "Internet as a Service", "Infrastructure as a Service", "Internal as a Service", "Information as a Service", "B"),
+    ("Which company developed VMware?", "Google", "VMware", "Facebook", "Oracle", "B"),
+    ("Which virtualization uses a hypervisor?", "Full Virtualization", "Mobile Computing", "Nano Computing", "Optical Computing", "A"),
+    ("Which is a cloud platform by Google?", "Google App Engine", "Google Paint", "Google Docs", "Google Search", "A"),
+    ("Web 3.0 focuses on:", "Semantic Web", "CDs", "Printers", "Mouse", "A"),
+    ("Which service is provided by Amazon?", "Amazon EC2", "Amazon Word", "Amazon Paint", "Amazon DOS", "A"),
+    ("What is the brain of virtualization?", "Firewall", "Hypervisor", "Router", "Browser", "B")
 ]
 
-cur.executemany("INSERT INTO questions (question, option1, option2, option3, option4, correct_answer) VALUES (?, ?, ?, ?, ?, ?)", questions)
+# Insert all questions into the database
+cur.executemany("INSERT INTO questions (question, option1, option2, option3, option4, correct_answer) VALUES (?, ?, ?, ?, ?, ?)", cloud_questions)
 
+# Save and close
 conn.commit()
 conn.close()
 
-print("Database Ready!")
+print("Database successfully rebuilt with 10 Cloud Computing questions!")
