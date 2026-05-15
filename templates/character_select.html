@@ -196,7 +196,10 @@
     </style>
 </head>
 <body>
+<form action="/battle_mode" method="GET">
 
+    <input type="hidden" name="hero" id="hero">
+    <input type="hidden" name="enemy" id="enemy">
 <div class="main-box">
     <div class="selection-area">
 
@@ -267,6 +270,7 @@
     <a href="/battle_mode">
         <button class="start-btn">START QUIZ BATTLE</button>
     </a>
+    </form>
 </div>
 
 <script>
