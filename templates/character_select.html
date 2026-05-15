@@ -13,17 +13,17 @@
 
         body {
             height: 100vh;
-            background: #050a15; /* Darker background to make neon pop */
+            background: #050a15; 
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* Prevent scrolling from 3D elements */
+            overflow: hidden; 
         }
 
         .main-box {
             width: 95%;
             max-width: 1400px;
-            background: rgba(10, 20, 40, 0.6); /* Sci-fi dark glass */
+            background: rgba(10, 20, 40, 0.6); 
             backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 40px;
@@ -51,12 +51,11 @@
             letter-spacing: 2px;
         }
 
-        /* --- 3D Carousel Styles --- */
         .scene {
             position: relative;
             width: 100%;
-            height: 300px; /* Height of the cards */
-            perspective: 1000px; /* Crucial for 3D depth */
+            height: 300px; 
+            perspective: 1000px; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -82,7 +81,6 @@
             flex-direction: column;
         }
 
-        /* Specific glow for Heroes and Enemies */
         .hero-card {
             border: 2px solid #00f3ff;
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.4), inset 0 0 20px rgba(0, 243, 255, 0.2);
@@ -115,7 +113,6 @@
         .hero-card .name { text-shadow: 0 0 5px #00f3ff; }
         .enemy-card .name { text-shadow: 0 0 5px #ff003c; }
 
-        /* Navigation Arrows */
         .nav-btn {
             position: absolute;
             top: 50%;
@@ -151,7 +148,6 @@
         .prev-btn { left: -20px; }
         .next-btn { right: -20px; }
 
-        /* Holographic Base from your image */
         .holo-base {
             width: 250px;
             height: 40px;
@@ -160,7 +156,7 @@
             background: radial-gradient(ellipse at center, rgba(0, 243, 255, 0.4) 0%, rgba(0,0,0,0) 70%);
             box-shadow: 0 20px 30px rgba(0, 243, 255, 0.2);
             border: 2px solid rgba(0, 243, 255, 0.3);
-            transform: rotateX(70deg); /* Lays it flat */
+            transform: rotateX(70deg); 
         }
 
         .side:nth-child(2) .holo-base {
@@ -191,8 +187,6 @@
             background: rgba(255, 215, 0, 0.1);
             box-shadow: 0 0 30px gold, inset 0 0 20px gold;
         }
-
-        a { text-decoration: none; }
     </style>
 </head>
 <body>
@@ -264,12 +258,19 @@
 
     </div>
 
-    <a href="/battle_mode">
-        <button class="start-btn">START QUIZ BATTLE</button>
-    </a>
+    <form action="/battle_mode" method="GET">
+        <input type="hidden" name="hero" id="hero-input" value="ironman">
+        <input type="hidden" name="enemy" id="enemy-input" value="thanos">
+        
+        <button type="submit" class="start-btn">START QUIZ BATTLE</button>
+    </form>
 </div>
 
 <script>
+    // 1. Define your character arrays (must match the exact order of the HTML cards)
+    const heroesList = ["ironman", "thor", "spiderman", "wanda"];
+    const enemiesList = ["thanos", "loki", "ultron", "doctor doom"];
+
     // State trackers for both carousels
     const state = {
         hero: { index: 0, cards: document.querySelectorAll('#hero-carousel .card') },
@@ -279,20 +280,24 @@
     function updateCarousel(type) {
         const { index, cards } = state[type];
         
+        // 2. UPDATE THE HIDDEN INPUT AUTOMATICALLY based on the center card's index
+        if (type === 'hero') {
+            document.getElementById('hero-input').value = heroesList[index];
+        } else if (type === 'enemy') {
+            document.getElementById('enemy-input').value = enemiesList[index];
+        }
+
         cards.forEach((card, i) => {
-            // Calculate distance from the center
             let offset = i - index;
             let absOffset = Math.abs(offset);
 
-            // 3D Math logic
-            let translateZ = -absOffset * 80;       // Push back in space
-            let translateX = offset * 110;          // Move left or right
-            let rotateY = offset * -20;             // Angle slightly inward
-            let scale = 1 - (absOffset * 0.1);      // Shrink outer cards
-            let opacity = absOffset > 1 ? 0.3 : 1;  // Dim outer cards
-            let zIndex = cards.length - absOffset;  // Keep center card on top
+            let translateZ = -absOffset * 80;       
+            let translateX = offset * 110;          
+            let rotateY = offset * -20;             
+            let scale = 1 - (absOffset * 0.1);      
+            let opacity = absOffset > 1 ? 0.3 : 1;  
+            let zIndex = cards.length - absOffset;  
 
-            // Apply transformations
             card.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
             card.style.opacity = opacity;
             card.style.zIndex = zIndex;
@@ -309,7 +314,6 @@
     function moveCarousel(type, direction) {
         const maxIndex = state[type].cards.length - 1;
         
-        // Update index, bounded by 0 and maxIndex
         state[type].index += direction;
         
         if (state[type].index < 0) state[type].index = 0;
@@ -321,18 +325,6 @@
     // Initialize both carousels on page load
     updateCarousel('hero');
     updateCarousel('enemy');
-</script>
-
-    <script>
-
-function selectHero(name){
-    document.getElementById("hero").value = name;
-}
-
-function selectEnemy(name){
-    document.getElementById("enemy").value = name;
-}
-
 </script>
 
 </body>
