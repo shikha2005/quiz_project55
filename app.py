@@ -181,7 +181,7 @@ def mode():
 @app.route('/character_select')
 def character_select():
     return render_template('character_select.html')
-    @app.route('/battle_mode')
+    #battle mode
 @app.route('/battle_mode')
 def battle_mode():
 
