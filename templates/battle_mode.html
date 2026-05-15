@@ -55,9 +55,9 @@
 
         <div class="fighter">
 
-            <img src="/static/images/characters/ironman.jpg">
+            <img src="/static/images/characters/{{ hero }}.jpg">
 
-            <h2>IRON MAN</h2>
+            {{ hero.upper() }}
 
             <h3>HP: {{ player_hp }}</h3>
 
@@ -66,9 +66,9 @@
 
         <div class="fighter">
 
-            <img src="/static/images/characters/thanos.jpg">
+            <img src="/static/images/characters/{{ enemy }}.jpg">
 
-            <h2>THANOS</h2>
+            <img src="/static/images/characters/{{ enemy }}.jpg">
 
             <h3>HP: {{ enemy_hp }}</h3>
 
