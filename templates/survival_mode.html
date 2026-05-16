@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Survival Mode</title>
+    <style>
+        body {
+            background: black;
+            color: white;
+            font-family: Arial;
+            margin: 0;
+            padding: 30px;
+        }
+        .hud {
+            text-align: center;
+            color: gold;
+            margin-bottom: 20px;
+        }
+        .fighters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        .fighter {
+            text-align: center;
+        }
+        img {
+            width: 180px;
+            height: 220px;
+            border-radius: 15px;
+        }
+        .quiz-box {
+            text-align: center;
+            background: #111;
+            padding: 30px;
+            border-radius: 20px;
+        }
+        button {
+            display: block;
+            width: 60%;
+            margin: 15px auto;
+            padding: 15px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hud">
+        <h1>WAVE {{ wave }}</h1>
+        <h2>SCORE: {{ score }}</h2>
+    </div>
+
+    <div class="fighters">
+        <div class="fighter">
+            <img src="/static/images/characters/{{ hero }}.jpg">
+            <h2>{{ hero.upper() }}</h2>
+            <h3 style="color: #00f3ff;">HP: {{ player_hp }}</h3>
+        </div>
+
+        <div class="fighter">
+            <img src="/static/images/characters/{{ enemy }}.jpg">
+            <h2 style="color: red;">{{ enemy.upper() }}</h2>
+            <h3 style="color: red;">DANGER</h3>
+        </div>
+    </div>
+
+    <div class="quiz-box">
+        <h3>{{ question }}</h3>
+
+        <form method="POST">
+            <button name="answer" value="A">{{ option1 }}</button>
+            <button name="answer" value="B">{{ option2 }}</button>
+            <button name="answer" value="C">{{ option3 }}</button>
+            <button name="answer" value="D">{{ option4 }}</button>
+        </form>
+    </div>
+
+</body>
+</html>
