@@ -214,9 +214,9 @@ def battle_mode():
             correct_answer = db_questions[current_q_index][6]
 
             if user_answer == correct_answer:
-                session['enemy_hp'] -= 20
+                session['enemy_hp'] -= 10
             else:
-                session['player_hp'] -= 20
+                session['player_hp'] -= 10
             
             # Advance to the next question
             session['q_no'] += 1
