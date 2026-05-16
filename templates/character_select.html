@@ -194,7 +194,7 @@
 <div class="main-box">
     <div class="selection-area">
 
-        <div class="side" {% if mode == 'survival' %} style="width: 100%; max-width: 400px; margin: 0 auto;" {% endif %}>
+        <div class="side" {% if mode == 'survival' or mode == 'time_attack' %} style="width: 100%; max-width: 400px; margin: 0 auto;" {% endif %}>
             <h2>CHOOSE HERO</h2>
             
             <div class="scene">
@@ -225,7 +225,7 @@
             <div class="holo-base"></div>
         </div>
 
-        {% if mode != 'survival' %}
+        {% if mode == 'battle' %}
         <div class="side">
             <h2>CHOOSE ENEMY</h2>
             
@@ -265,6 +265,11 @@
             <input type="hidden" name="hero" id="hero-input" value="ironman">
             <button type="submit" class="start-btn" style="border-color: red; color: red; text-shadow: 0 0 10px red;">START SURVIVAL</button>
         </form>
+    {% elif mode == 'time_attack' %}
+        <form action="/time_attack_mode" method="GET">
+            <input type="hidden" name="hero" id="hero-input" value="ironman">
+            <button type="submit" class="start-btn" style="border-color: #d100ff; color: #d100ff; text-shadow: 0 0 10px #d100ff;">START TIME ATTACK</button>
+        </form>
     {% else %}
         <form action="/battle_mode" method="GET">
             <input type="hidden" name="hero" id="hero-input" value="ironman">
@@ -289,7 +294,7 @@
     }
 
     function updateCarousel(type) {
-        // Prevent crashing if trying to update an enemy that doesn't exist (Survival Mode)
+        // Prevent crashing if trying to update an enemy that doesn't exist
         if (!state[type]) return; 
 
         const { index, cards } = state[type];
