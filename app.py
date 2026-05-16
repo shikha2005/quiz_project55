@@ -257,6 +257,78 @@ def battle_mode():
         option3=question_data[4],
         option4=question_data[5]
     )
+    # SURVIVAL MODE
+@app.route('/survival_mode', methods=['GET', 'POST'])
+def survival_mode():
+    # List of enemies to randomly spawn
+    ENEMY_LIST = ["thanos", "loki", "ultron", "doctor doom"]
+
+    conn = sqlite3.connect('database.db')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM questions")
+    db_questions = cur.fetchall()
+    conn.close()
+
+    # 1. Start of Game Setup
+    if request.method == 'GET' and request.args.get('hero'):
+        session['surv_wave'] = 1
+        session['surv_hp'] = 100
+        session['surv_score'] = 0
+        session['surv_q_no'] = 1
+        session['surv_hero'] = request.args.get('hero')
+        session['surv_enemy'] = random.choice(ENEMY_LIST) # Spawn first random enemy
+
+    if 'surv_hp' not in session:
+        return redirect('/character_select')
+
+    # 2. Handle Answers
+    if request.method == 'POST':
+        user_answer = request.form.get('answer')
+        current_q_index = session['surv_q_no'] - 1
+
+        if current_q_index < len(db_questions):
+            correct_answer = db_questions[current_q_index][6]
+
+            if user_answer == correct_answer:
+                # Correct: Defeat enemy, Score +10, Next Wave
+                session['surv_wave'] += 1
+                session['surv_score'] += 10
+                session['surv_enemy'] = random.choice(ENEMY_LIST) # Spawn new enemy!
+            else:
+                # Wrong: Hero loses 10 HP
+                session['surv_hp'] -= 10
+            
+            session['surv_q_no'] += 1 # Move to next question
+
+    # 3. Check Game Over
+    if session['surv_hp'] <= 0:
+        final_score = session['surv_score']
+        session.pop('surv_hp', None) # Clear game state
+        return f"<body style='background:black; color:red; text-align:center; font-family:Arial; padding-top:100px;'><h1>GAME OVER</h1><h2>Final Score: {final_score}</h2><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
+
+    # Check if they survived ALL questions in the database
+    if session['surv_q_no'] > len(db_questions):
+        final_score = session['surv_score']
+        session.pop('surv_hp', None)
+        return f"<body style='background:black; color:gold; text-align:center; font-family:Arial; padding-top:100px;'><h1>YOU SURVIVED THEM ALL!</h1><h2>Final Score: {final_score}</h2><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
+
+    # 4. Prepare data for the HTML template
+    current_q_index = session['surv_q_no'] - 1
+    question_data = db_questions[current_q_index]
+
+    return render_template(
+        'survival_mode.html',
+        hero=session['surv_hero'],
+        enemy=session['surv_enemy'],
+        player_hp=session['surv_hp'],
+        wave=session['surv_wave'],
+        score=session['surv_score'],
+        question=question_data[1],
+        option1=question_data[2],
+        option2=question_data[3],
+        option3=question_data[4],
+        option4=question_data[5]
+    )
 
 # keep this at the END of app.py
 if __name__ == '__main__':
