@@ -179,7 +179,10 @@ def mode():
 # CHARACTER SELECT
 @app.route('/character_select')
 def character_select():
-    return render_template('character_select.html')
+    # Grab the mode from the URL. If they somehow skip the mode screen, default to battle.
+    game_mode = request.args.get('mode', 'battle') 
+    
+    return render_template('character_select.html', mode=game_mode)
 
 # BATTLE MODE
 @app.route('/battle_mode', methods=['GET', 'POST'])
