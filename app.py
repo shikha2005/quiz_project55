@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session
 import sqlite3
 import os
 import random
+import time
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = "secret"
@@ -327,6 +328,70 @@ def survival_mode():
         player_hp=session['surv_hp'],
         wave=session['surv_wave'],
         score=session['surv_score'],
+        question=question_data[1],
+        option1=question_data[2],
+        option2=question_data[3],
+        option3=question_data[4],
+        option4=question_data[5]
+    )
+    # TIME ATTACK MODE
+@app.route('/time_attack_mode', methods=['GET', 'POST'])
+def time_attack_mode():
+    conn = sqlite3.connect('database.db')
+    cur = conn.cursor()
+    # We will create a time_attack_questions table next!
+    cur.execute("SELECT * FROM time_attack_questions")
+    db_questions = cur.fetchall()
+    conn.close()
+
+    # 1. Start of Game Setup
+    if request.method == 'GET' and request.args.get('hero'):
+        session['ta_score'] = 0
+        session['ta_q_no'] = 1
+        session['ta_hero'] = request.args.get('hero')
+        # Set the exact timestamp when the game should end (Current time + 60 seconds)
+        session['ta_end_time'] = time.time() + 60 
+
+    if 'ta_end_time' not in session:
+        return redirect('/character_select')
+
+    # 2. Calculate Remaining Time
+    time_left = int(session['ta_end_time'] - time.time())
+
+    # 3. Check Game Over (Timer hit 0)
+    if time_left <= 0:
+        final_score = session.get('ta_score', 0)
+        session.pop('ta_end_time', None) # Clear game state
+        return f"<body style='background:black; color:gold; text-align:center; font-family:Arial; padding-top:100px;'><h1>⏱ TIME UP!</h1><h2>Final Score: {final_score}</h2><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
+
+    # 4. Handle Answers
+    if request.method == 'POST':
+        user_answer = request.form.get('answer')
+        
+        # We use modulo (%) to loop back to the start if they answer all questions fast!
+        current_q_index = (session['ta_q_no'] - 1) % len(db_questions)
+        correct_answer = db_questions[current_q_index][6]
+
+        if user_answer == correct_answer:
+            session['ta_score'] += 10 # +10 for correct
+        # Wrong answers do nothing (no score, no penalty)
+
+        session['ta_q_no'] += 1 # Always move to next question
+        
+        # Re-calculate time after they submit an answer so the next page load is accurate
+        time_left = int(session['ta_end_time'] - time.time())
+        if time_left <= 0:
+            return redirect('/time_attack_mode') # Will trigger the Game Over screen above
+
+    # 5. Prepare data for the HTML template
+    current_q_index = (session['ta_q_no'] - 1) % len(db_questions)
+    question_data = db_questions[current_q_index]
+
+    return render_template(
+        'time_attack_mode.html',
+        hero=session['ta_hero'],
+        score=session['ta_score'],
+        time_left=time_left,
         question=question_data[1],
         option1=question_data[2],
         option2=question_data[3],
