@@ -194,7 +194,7 @@
 <div class="main-box">
     <div class="selection-area">
 
-        <div class="side">
+        <div class="side" {% if mode == 'survival' %} style="width: 100%; max-width: 400px; margin: 0 auto;" {% endif %}>
             <h2>CHOOSE HERO</h2>
             
             <div class="scene">
@@ -225,6 +225,7 @@
             <div class="holo-base"></div>
         </div>
 
+        {% if mode != 'survival' %}
         <div class="side">
             <h2>CHOOSE ENEMY</h2>
             
@@ -255,35 +256,48 @@
 
             <div class="holo-base"></div>
         </div>
+        {% endif %}
 
     </div>
 
-    <form action="/battle_mode" method="GET">
-        <input type="hidden" name="hero" id="hero-input" value="ironman">
-        <input type="hidden" name="enemy" id="enemy-input" value="thanos">
-        
-        <button type="submit" class="start-btn">START QUIZ BATTLE</button>
-    </form>
+    {% if mode == 'survival' %}
+        <form action="/survival_mode" method="GET">
+            <input type="hidden" name="hero" id="hero-input" value="ironman">
+            <button type="submit" class="start-btn" style="border-color: red; color: red; text-shadow: 0 0 10px red;">START SURVIVAL</button>
+        </form>
+    {% else %}
+        <form action="/battle_mode" method="GET">
+            <input type="hidden" name="hero" id="hero-input" value="ironman">
+            <input type="hidden" name="enemy" id="enemy-input" value="thanos">
+            <button type="submit" class="start-btn">START BATTLE</button>
+        </form>
+    {% endif %}
 </div>
 
 <script>
-    // 1. Define your character arrays (must match the exact order of the HTML cards)
     const heroesList = ["ironman", "thor", "spiderman", "wanda"];
     const enemiesList = ["thanos", "loki", "ultron", "doctor doom"];
 
-    // State trackers for both carousels
+    // 1. Initialize State. We only add the enemy state if the enemy carousel actually exists on the page.
+    const enemyCards = document.querySelectorAll('#enemy-carousel .card');
     const state = {
-        hero: { index: 0, cards: document.querySelectorAll('#hero-carousel .card') },
-        enemy: { index: 0, cards: document.querySelectorAll('#enemy-carousel .card') }
+        hero: { index: 0, cards: document.querySelectorAll('#hero-carousel .card') }
     };
 
+    if (enemyCards.length > 0) {
+        state.enemy = { index: 0, cards: enemyCards };
+    }
+
     function updateCarousel(type) {
+        // Prevent crashing if trying to update an enemy that doesn't exist (Survival Mode)
+        if (!state[type]) return; 
+
         const { index, cards } = state[type];
         
-        // 2. UPDATE THE HIDDEN INPUT AUTOMATICALLY based on the center card's index
+        // Update hidden inputs
         if (type === 'hero') {
             document.getElementById('hero-input').value = heroesList[index];
-        } else if (type === 'enemy') {
+        } else if (type === 'enemy' && document.getElementById('enemy-input')) {
             document.getElementById('enemy-input').value = enemiesList[index];
         }
 
@@ -302,7 +316,6 @@
             card.style.opacity = opacity;
             card.style.zIndex = zIndex;
             
-            // Toggle active class for glowing effect
             if(absOffset === 0) {
                 card.classList.add('active');
             } else {
@@ -312,8 +325,9 @@
     }
 
     function moveCarousel(type, direction) {
+        if (!state[type]) return;
+
         const maxIndex = state[type].cards.length - 1;
-        
         state[type].index += direction;
         
         if (state[type].index < 0) state[type].index = 0;
@@ -322,9 +336,11 @@
         updateCarousel(type);
     }
 
-    // Initialize both carousels on page load
+    // Initialize carousels on page load
     updateCarousel('hero');
-    updateCarousel('enemy');
+    if (state.enemy) {
+        updateCarousel('enemy');
+    }
 </script>
 
 </body>
