@@ -191,7 +191,7 @@ def battle_mode():
     # 1. Fetch all questions from the database
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
-    cur.execute("SELECT * FROM questions")
+    cur.execute("SELECT * FROM battle_questions")
     db_questions = cur.fetchall()
     conn.close()
 
@@ -269,7 +269,7 @@ def survival_mode():
 
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
-    cur.execute("SELECT * FROM questions")
+    cur.execute("SELECT * FROM battle_questions")
     db_questions = cur.fetchall()
     conn.close()
 
