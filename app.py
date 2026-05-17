@@ -1,11 +1,24 @@
 from flask import Flask, render_template, request, redirect, session
-import sqlite3
+import pymysql  # Replaced sqlite3
 import os
 import random
 import time
 
 app = Flask(__name__, static_folder='static')
-app.secret_key = "secret"
+# Uses Render's environment variable for security, or defaults to "secret"
+app.secret_key = os.environ.get("SECRET_KEY", "secret")
+
+# --- HELPER FUNCTION: Securely connects to TiDB Cloud ---
+def get_db_connection():
+    return pymysql.connect(
+        host=os.environ.get("DB_HOST", "YOUR_TIDB_HOST_URL"),
+        user=os.environ.get("DB_USER", "YOUR_TIDB_USER"),
+        password=os.environ.get("DB_PASSWORD", "YOUR_TIDB_PASSWORD"),
+        database=os.environ.get("DB_NAME", "marvel_quiz"),
+        port=int(os.environ.get("DB_PORT", 4000)), # TiDB port!
+        ssl_verify_cert=True,
+        ssl_verify_identity=True
+    )
 
 # HOME
 @app.route('/')
@@ -19,9 +32,10 @@ def login():
         u = request.form['username']
         p = request.form['password']
 
-        conn = sqlite3.connect('database.db')
+        conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM users WHERE username=? AND password=?", (u,p))
+        # Note: Changed ? to %s for MySQL syntax
+        cur.execute("SELECT * FROM users WHERE username=%s AND password=%s", (u, p))
         user = cur.fetchone()
         conn.close()
 
@@ -44,7 +58,7 @@ def quiz():
     if 'user' not in session:
         return redirect('/login')
 
-    conn = sqlite3.connect('database.db')
+    conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT * FROM questions")
     questions = cur.fetchall()
@@ -58,7 +72,7 @@ def result():
     score = 0
     answers = request.form
 
-    conn = sqlite3.connect('database.db')
+    conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT * FROM questions")
     questions = cur.fetchall()
@@ -76,7 +90,7 @@ def admin():
     if session.get('role') != 'admin':
         return "Access Denied"
 
-    conn = sqlite3.connect('database.db')
+    conn = get_db_connection()
     cur = conn.cursor()
 
     if request.method == 'POST':
@@ -87,7 +101,8 @@ def admin():
         o4 = request.form['o4']
         ans = request.form['answer']
 
-        cur.execute("INSERT INTO questions (question, option1, option2, option3, option4, correct_answer) VALUES (?, ?, ?, ?, ?, ?)", (q,o1,o2,o3,o4,ans))
+        # Note: Changed ? to %s
+        cur.execute("INSERT INTO questions (question, option1, option2, option3, option4, correct_answer) VALUES (%s, %s, %s, %s, %s, %s)", (q,o1,o2,o3,o4,ans))
         conn.commit()
 
     # Fetch all questions
@@ -103,9 +118,10 @@ def delete(id):
     if session.get('role') != 'admin':
         return "Access Denied"
 
-    conn = sqlite3.connect('database.db')
+    conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("DELETE FROM questions WHERE id=?", (id,))
+    # Note: Changed ? to %s
+    cur.execute("DELETE FROM questions WHERE id=%s", (id,))
     conn.commit()
     conn.close()
 
@@ -127,10 +143,11 @@ def signup():
         if len(p) < 5:
             return "Password must be at least 5 characters"
 
-        conn = sqlite3.connect('database.db')
+        conn = get_db_connection()
         cur = conn.cursor()
+        # Note: Changed ? to %s
         cur.execute(
-            "INSERT INTO users (username, password, role) VALUES (?, ?, 'user')",
+            "INSERT INTO users (username, password, role) VALUES (%s, %s, 'user')",
             (u, p)
         )
         conn.commit()
@@ -145,7 +162,7 @@ def edit(id):
     if session.get('role') != 'admin':
         return "Access Denied"
 
-    conn = sqlite3.connect('database.db')
+    conn = get_db_connection()
     cur = conn.cursor()
 
     if request.method == 'POST':
@@ -156,10 +173,11 @@ def edit(id):
         o4 = request.form['o4']
         ans = request.form['answer']
 
+        # Note: Changed ? to %s
         cur.execute("""
             UPDATE questions 
-            SET question=?, option1=?, option2=?, option3=?, option4=?, correct_answer=? 
-            WHERE id=?
+            SET question=%s, option1=%s, option2=%s, option3=%s, option4=%s, correct_answer=%s 
+            WHERE id=%s
         """, (q, o1, o2, o3, o4, ans, id))
 
         conn.commit()
@@ -167,7 +185,8 @@ def edit(id):
         return redirect('/admin')
 
     # GET request (load existing data)
-    cur.execute("SELECT * FROM questions WHERE id=?", (id,))
+    # Note: Changed ? to %s
+    cur.execute("SELECT * FROM questions WHERE id=%s", (id,))
     question = cur.fetchone()
     conn.close()
 
@@ -181,22 +200,18 @@ def mode():
 # CHARACTER SELECT
 @app.route('/character_select')
 def character_select():
-    # Grab the mode from the URL. If they somehow skip the mode screen, default to battle.
     game_mode = request.args.get('mode', 'battle') 
-    
     return render_template('character_select.html', mode=game_mode)
 
 # BATTLE MODE
 @app.route('/battle_mode', methods=['GET', 'POST'])
 def battle_mode():
-    # 1. Fetch all questions from the database
-    conn = sqlite3.connect('database.db')
+    conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT * FROM battle_questions")
     db_questions = cur.fetchall()
     conn.close()
 
-    # 2. If we receive hero and enemy in the URL via GET, start a NEW game
     if request.method == 'GET' and request.args.get('hero'):
         session['q_no'] = 1
         session['player_hp'] = 100
@@ -204,18 +219,14 @@ def battle_mode():
         session['hero'] = request.args.get('hero')
         session['enemy'] = request.args.get('enemy')
 
-    # Safety catch: redirect if they didn't go through character selection
     if 'q_no' not in session:
         return redirect('/character_select')
 
-    # 3. Handle Answer Submission
     if request.method == 'POST':
         user_answer = request.form.get('answer')
         current_q_index = session['q_no'] - 1
 
-        # Check the answer and adjust HP
         if current_q_index < len(db_questions):
-            # In our DB setup, the correct answer is the 7th column (index 6)
             correct_answer = db_questions[current_q_index][6]
 
             if user_answer == correct_answer:
@@ -223,10 +234,8 @@ def battle_mode():
             else:
                 session['player_hp'] -= 10
             
-            # Advance to the next question
             session['q_no'] += 1
 
-   # 4. Check Game Over / Victory / Draw Conditions
     if session['enemy_hp'] <= 0:
         session.pop('q_no', None)
         return """
@@ -263,16 +272,9 @@ def battle_mode():
         </body>
         """
 
-    # 5. Prepare the next question to render
     current_q_index = session['q_no'] - 1
     question_data = db_questions[current_q_index]
 
-    # In our DB setup:
-    # question_data[1] = the question text
-    # question_data[2] = Option 1
-    # question_data[3] = Option 2
-    # question_data[4] = Option 3
-    # question_data[5] = Option 4
     return render_template(
         'battle_mode.html',
         hero=session['hero'],
@@ -286,31 +288,29 @@ def battle_mode():
         option3=question_data[4],
         option4=question_data[5]
     )
-    # SURVIVAL MODE
+
+# SURVIVAL MODE
 @app.route('/survival_mode', methods=['GET', 'POST'])
 def survival_mode():
-    # List of enemies to randomly spawn
     ENEMY_LIST = ["thanos", "loki", "ultron", "doctor doom"]
 
-    conn = sqlite3.connect('database.db')
+    conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM battle_questions")
+    cur.execute("SELECT * FROM survival_questions")
     db_questions = cur.fetchall()
     conn.close()
 
-    # 1. Start of Game Setup
     if request.method == 'GET' and request.args.get('hero'):
         session['surv_wave'] = 1
         session['surv_hp'] = 100
         session['surv_score'] = 0
         session['surv_q_no'] = 1
         session['surv_hero'] = request.args.get('hero')
-        session['surv_enemy'] = random.choice(ENEMY_LIST) # Spawn first random enemy
+        session['surv_enemy'] = random.choice(ENEMY_LIST)
 
     if 'surv_hp' not in session:
         return redirect('/character_select')
 
-    # 2. Handle Answers
     if request.method == 'POST':
         user_answer = request.form.get('answer')
         current_q_index = session['surv_q_no'] - 1
@@ -319,17 +319,14 @@ def survival_mode():
             correct_answer = db_questions[current_q_index][6]
 
             if user_answer == correct_answer:
-                # Correct: Defeat enemy, Score +10, Next Wave
                 session['surv_wave'] += 1
                 session['surv_score'] += 10
-                session['surv_enemy'] = random.choice(ENEMY_LIST) # Spawn new enemy!
+                session['surv_enemy'] = random.choice(ENEMY_LIST)
             else:
-                # Wrong: Hero loses 10 HP
                 session['surv_hp'] -= 10
             
-            session['surv_q_no'] += 1 # Move to next question
+            session['surv_q_no'] += 1
 
-    # 3. Check Game Over
     if session['surv_hp'] <= 0:
         final_score = session['surv_score']
         session.pop('surv_hp', None) 
@@ -344,7 +341,6 @@ def survival_mode():
         </body>
         """
 
-    # Check if they survived ALL questions
     if session['surv_q_no'] > len(db_questions):
         final_score = session['surv_score']
         session.pop('surv_hp', None)
@@ -358,7 +354,7 @@ def survival_mode():
             </div>
         </body>
         """
-    # 4. Prepare data for the HTML template
+
     current_q_index = session['surv_q_no'] - 1
     question_data = db_questions[current_q_index]
 
@@ -375,45 +371,40 @@ def survival_mode():
         option3=question_data[4],
         option4=question_data[5]
     )
-    # TIME ATTACK MODE
+
+# TIME ATTACK MODE
 @app.route('/time_attack_mode', methods=['GET', 'POST'])
 def time_attack_mode():
-    conn = sqlite3.connect('database.db')
+    conn = get_db_connection()
     cur = conn.cursor()
-    # We will create a time_attack_questions table next!
     cur.execute("SELECT * FROM time_attack_questions")
     db_questions = cur.fetchall()
     conn.close()
 
-    # 1. Start of Game Setup
     if request.method == 'GET' and request.args.get('hero'):
         session['ta_score'] = 0
         session['ta_q_no'] = 1
         session['ta_hero'] = request.args.get('hero')
-        # Set the exact timestamp when the game should end (Current time + 60 seconds)
         session['ta_end_time'] = time.time() + 60 
 
     if 'ta_end_time' not in session:
         return redirect('/character_select')
 
-    # 2. Calculate Remaining Time
     time_left = int(session['ta_end_time'] - time.time())
 
-   # 3. Check Game Over (Timer hit 0)
     if time_left <= 0:
         final_score = session.get('ta_score', 0)
         session.pop('ta_end_time', None) 
 
-        # --- NEW RANKING LOGIC ---
         if final_score < 30:
             rank_message = "FAILED! Too slow."
-            rank_color = "#ff003c" # Red
+            rank_color = "#ff003c" 
         elif final_score < 70:
             rank_message = "PASSED! Good speed."
-            rank_color = "#00f3ff" # Cyan
+            rank_color = "#00f3ff" 
         else:
             rank_message = "S-RANK! Absolute Legend!"
-            rank_color = "gold"    # Gold
+            rank_color = "gold"    
             
         return f"""
         <body style='background:#050a15; color:{rank_color}; text-align:center; font-family:Arial; padding-top:100px;'>
@@ -426,26 +417,21 @@ def time_attack_mode():
             </div>
         </body>
         """
-    # 4. Handle Answers
+
     if request.method == 'POST':
         user_answer = request.form.get('answer')
-        
-        # We use modulo (%) to loop back to the start if they answer all questions fast!
         current_q_index = (session['ta_q_no'] - 1) % len(db_questions)
         correct_answer = db_questions[current_q_index][6]
 
         if user_answer == correct_answer:
-            session['ta_score'] += 10 # +10 for correct
-        # Wrong answers do nothing (no score, no penalty)
+            session['ta_score'] += 10 
 
-        session['ta_q_no'] += 1 # Always move to next question
+        session['ta_q_no'] += 1 
         
-        # Re-calculate time after they submit an answer so the next page load is accurate
         time_left = int(session['ta_end_time'] - time.time())
         if time_left <= 0:
-            return redirect('/time_attack_mode') # Will trigger the Game Over screen above
+            return redirect('/time_attack_mode') 
 
-    # 5. Prepare data for the HTML template
     current_q_index = (session['ta_q_no'] - 1) % len(db_questions)
     question_data = db_questions[current_q_index]
 
@@ -461,8 +447,7 @@ def time_attack_mode():
         option4=question_data[5]
     )
 
-# keep this at the END of app.py
 if __name__ == '__main__':
-    import os
+    # This port runs your Flask web app. Keep this as os.environ.get("PORT", 5000) for Render!
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
