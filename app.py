@@ -332,15 +332,32 @@ def survival_mode():
     # 3. Check Game Over
     if session['surv_hp'] <= 0:
         final_score = session['surv_score']
-        session.pop('surv_hp', None) # Clear game state
-        return f"<body style='background:black; color:red; text-align:center; font-family:Arial; padding-top:100px;'><h1>GAME OVER</h1><h2>Final Score: {final_score}</h2><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
+        session.pop('surv_hp', None) 
+        return f"""
+        <body style='background:#050a15; color:#ff003c; text-align:center; font-family:Arial; padding-top:100px;'>
+            <h1 style='font-size: 50px; text-shadow: 0 0 20px #ff003c;'>GAME OVER</h1>
+            <h2 style='color: gold;'>Final Score: {final_score}</h2>
+            <div style='margin-top: 40px;'>
+                <a href='/character_select?mode=survival'><button style='padding:15px 30px; font-size:18px; cursor:pointer; background:transparent; color:white; border:2px solid cyan; border-radius:8px; margin: 10px;'>↻ Play Again</button></a>
+                <a href='/'><button style='padding:15px 30px; font-size:18px; cursor:pointer; background:transparent; color:white; border:2px solid #ff003c; border-radius:8px; margin: 10px;'>🏠 Change Mode</button></a>
+            </div>
+        </body>
+        """
 
-    # Check if they survived ALL questions in the database
+    # Check if they survived ALL questions
     if session['surv_q_no'] > len(db_questions):
         final_score = session['surv_score']
         session.pop('surv_hp', None)
-        return f"<body style='background:black; color:gold; text-align:center; font-family:Arial; padding-top:100px;'><h1>YOU SURVIVED THEM ALL!</h1><h2>Final Score: {final_score}</h2><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
-
+        return f"""
+        <body style='background:#050a15; color:gold; text-align:center; font-family:Arial; padding-top:100px;'>
+            <h1 style='font-size: 50px; text-shadow: 0 0 20px gold;'>YOU SURVIVED THEM ALL!</h1>
+            <h2>Final Score: {final_score}</h2>
+            <div style='margin-top: 40px;'>
+                <a href='/character_select?mode=survival'><button style='padding:15px 30px; font-size:18px; cursor:pointer; background:transparent; color:white; border:2px solid cyan; border-radius:8px; margin: 10px;'>↻ Play Again</button></a>
+                <a href='/'><button style='padding:15px 30px; font-size:18px; cursor:pointer; background:transparent; color:white; border:2px solid #ff003c; border-radius:8px; margin: 10px;'>🏠 Change Mode</button></a>
+            </div>
+        </body>
+        """
     # 4. Prepare data for the HTML template
     current_q_index = session['surv_q_no'] - 1
     question_data = db_questions[current_q_index]
