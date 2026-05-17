@@ -226,18 +226,42 @@ def battle_mode():
             # Advance to the next question
             session['q_no'] += 1
 
-    # 4. Check Game Over / Victory / Draw Conditions
-    if session['player_hp'] <= 0:
-        session.pop('q_no', None) 
-        return "<body style='background:black; color:red; text-align:center; font-family:Arial; padding-top:100px;'><h1>Game Over! You lost.</h1><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
-    
+   # 4. Check Game Over / Victory / Draw Conditions
     if session['enemy_hp'] <= 0:
         session.pop('q_no', None)
-        return "<body style='background:black; color:#00f3ff; text-align:center; font-family:Arial; padding-top:100px;'><h1>Victory! You defeated the enemy!</h1><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
+        return """
+        <body style='background:#050a15; color:#00f3ff; text-align:center; font-family:Arial; padding-top:100px;'>
+            <h1 style='font-size: 50px; text-shadow: 0 0 20px #00f3ff;'>VICTORY! You defeated the enemy!</h1>
+            <div style='margin-top: 40px;'>
+                <a href='/character_select?mode=battle'><button style='padding:15px 30px; font-size:18px; cursor:pointer; background:transparent; color:white; border:2px solid cyan; border-radius:8px; margin: 10px; transition: 0.3s;'>↻ Play Again</button></a>
+                <a href='/'><button style='padding:15px 30px; font-size:18px; cursor:pointer; background:transparent; color:white; border:2px solid #ff003c; border-radius:8px; margin: 10px; transition: 0.3s;'>🏠 Change Mode</button></a>
+            </div>
+        </body>
+        """
     
-    if session['q_no'] > len(db_questions):
+    elif session['player_hp'] <= 0:
+        session.pop('q_no', None) 
+        return """
+        <body style='background:#050a15; color:#ff003c; text-align:center; font-family:Arial; padding-top:100px;'>
+            <h1 style='font-size: 50px; text-shadow: 0 0 20px #ff003c;'>GAME OVER! You lost.</h1>
+            <div style='margin-top: 40px;'>
+                <a href='/character_select?mode=battle'><button style='padding:15px 30px; font-size:18px; cursor:pointer; background:transparent; color:white; border:2px solid cyan; border-radius:8px; margin: 10px; transition: 0.3s;'>↻ Play Again</button></a>
+                <a href='/'><button style='padding:15px 30px; font-size:18px; cursor:pointer; background:transparent; color:white; border:2px solid #ff003c; border-radius:8px; margin: 10px; transition: 0.3s;'>🏠 Change Mode</button></a>
+            </div>
+        </body>
+        """
+    
+    elif session['q_no'] > len(db_questions):
         session.pop('q_no', None)
-        return "<body style='background:black; color:white; text-align:center; font-family:Arial; padding-top:100px;'><h1>It's a Draw! Out of questions.</h1><a href='/character_select'><button style='padding:15px 30px; font-size:20px; margin-top:20px; cursor:pointer;'>Play Again</button></a></body>"
+        return """
+        <body style='background:#050a15; color:white; text-align:center; font-family:Arial; padding-top:100px;'>
+            <h1 style='font-size: 50px; text-shadow: 0 0 20px white;'>IT'S A DRAW! Out of questions.</h1>
+            <div style='margin-top: 40px;'>
+                <a href='/character_select?mode=battle'><button style='padding:15px 30px; font-size:18px; cursor:pointer; background:transparent; color:white; border:2px solid cyan; border-radius:8px; margin: 10px; transition: 0.3s;'>↻ Play Again</button></a>
+                <a href='/'><button style='padding:15px 30px; font-size:18px; cursor:pointer; background:transparent; color:white; border:2px solid #ff003c; border-radius:8px; margin: 10px; transition: 0.3s;'>🏠 Change Mode</button></a>
+            </div>
+        </body>
+        """
 
     # 5. Prepare the next question to render
     current_q_index = session['q_no'] - 1
