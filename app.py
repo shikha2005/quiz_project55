@@ -11,9 +11,9 @@ app.secret_key = os.environ.get("SECRET_KEY", "secret")
 # --- HELPER FUNCTION: Securely connects to TiDB Cloud ---
 def get_db_connection():
     return pymysql.connect(
-        host=os.environ.get("DB_HOST", "YOUR_TIDB_HOST_URL"),
-        user=os.environ.get("DB_USER", "YOUR_TIDB_USER"),
-        password=os.environ.get("DB_PASSWORD", "YOUR_TIDB_PASSWORD"),
+        host=os.environ.get("DB_HOST", "gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com"),
+        user=os.environ.get("DB_USER", "4G39iFMGvttLX4s.root"),
+        password=os.environ.get("DB_PASSWORD", "KPh1mmslovO7g07C"),
         database=os.environ.get("DB_NAME", "marvel_quiz"),
         port=int(os.environ.get("DB_PORT", 4000)), # TiDB port!
         ssl_verify_cert=True,
